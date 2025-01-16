@@ -30,3 +30,7 @@ Not a question, and I know.
 No.
 ### Add X to ACE?
 Probably.
+
+# License
+
+Refer to `LICENSE` file within each addon folder. [MIT License](./LICENSE) otherwise.
