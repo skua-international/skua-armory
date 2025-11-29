@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project name="Skua">
     <Package name="Weapon_Tweaks">
-        <Key ID="STR_Skua_Weapon_Tweaks_LMG_Zafir_Name">
-            <English>Negev NG7-R</English>
-        </Key>
         <Key ID="STR_Skua_Weapon_Tweaks_ACPC2_Name">
             <English>Custom Covert II (.45, Tan)</English>
+        </Key>
+        <Key ID="STR_Skua_Weapon_Tweaks_LMG_Zafir_Name">
+            <English>Negev NG7-R</English>
         </Key>
     </Package>
 </Project>

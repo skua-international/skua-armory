@@ -7,7 +7,7 @@ class CfgWeapons {
                 class Hamr2Scope {
                     opticsZoomMin = 0.0625;
                     opticsZoomMax = 0.125;
-                    opticsZoomInit = 0.75;
+                    opticsZoomInit = 0.125;
                 };
             };
         };

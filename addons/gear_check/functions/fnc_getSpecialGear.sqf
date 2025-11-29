@@ -13,7 +13,7 @@ private _unitItems = uniqueUnitItems [_unit, 0, 2, 2, 2, true];
 private _missing = [];
 
 {
-    switch (tolower _x) do {
+    switch (toLower _x) do {
         case "medic": {
             [["ACE_bodyBag_blue"], _unitItems,      3, "Bodybags (Blue)", _missing] call FUNC(countItem);
             [["ACE_bodyBag_white"], _unitItems,     2, "Bodybags (White)", _missing] call FUNC(countItem);

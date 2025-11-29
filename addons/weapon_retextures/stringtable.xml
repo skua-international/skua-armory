@@ -1,23 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project name="Skua">
     <Package name="Weapon_Retextures">
-        <Key ID="STR_Skua_Weapon_Retextures_DMR_02_tna_Name">
-            <English>Noreen "Bad News" ULR (Tropic)</English>
-            <Czech>Noreen "Bad News" ULR (Tropická kamufláž)</Czech>
-            <French>Noreen "Bad News" ULR (Tropique)</French>
-            <Spanish>Noreen "Bad News" ULR (Trópico)</Spanish>
-            <Russian>Noreen "Bad News" ULR (тропик)</Russian>
-            <German>Noreen "Bad News" ULR (Tropisch)</German>
-            <Polish>Noreen "Bad News" ULR (zwrotnik)</Polish>
-            <Italian>Noreen "Bad News" ULR (Tropico)</Italian>
-            <Hungarian>Noreen "Bad News"ULR (Tropikus)</Hungarian>
-            <Portuguese>Noreen "Bad News" ULR (Trópico)</Portuguese>
-            <Japanese>ノレーン "バッド ニュース" ULR (熱帯迷彩)</Japanese>
-            <Korean>노린 "배드뉴스" ULR (열대)</Korean>
-            <Chinese>諾琳"壞消息"極距狙擊步槍 (熱帶迷彩)</Chinese>
-            <Chinesesimp>诺琳 "坏消息" 极距狙击步枪（热带迷彩</Chinesesimp>
-            <Turkish>Noreen "Bad News" ULR (Tropic)</Turkish>
-        </Key>
         <Key ID="STR_Skua_Weapon_Retextures_9mmC2_black_Name">
             <English>Custom Covert II (9mm, Black)</English>
         </Key>
@@ -30,11 +13,31 @@
         <Key ID="STR_Skua_Weapon_Retextures_ACPC2_classic_Name">
             <English>Custom Covert II (.45, Classic)</English>
         </Key>
-        <Key ID="STR_Skua_Weapon_Retextures_Pistol_Heavy_01_black_Name">
-            <English>FNX-45 Tactical (Black)</English>
+        <Key ID="STR_Skua_Weapon_Retextures_DMR_02_tna_Name">
+            <English>Noreen "Bad News" ULR (Tropic)</English>
+            <Czech>Noreen "Bad News" ULR (Tropická kamufláž)</Czech>
+            <French>Noreen "Bad News" ULR (Tropique)</French>
+            <Spanish>Noreen "Bad News" ULR (Trópico)</Spanish>
+            <Italian>Noreen "Bad News" ULR (Tropico)</Italian>
+            <Polish>Noreen "Bad News" ULR (zwrotnik)</Polish>
+            <Portuguese>Noreen "Bad News" ULR (Trópico)</Portuguese>
+            <Russian>Noreen "Bad News" ULR (тропик)</Russian>
+            <German>Noreen "Bad News" ULR (Tropisch)</German>
+            <Korean>노린 "배드뉴스" ULR (열대)</Korean>
+            <Japanese>ノレーン "バッド ニュース" ULR (熱帯迷彩)</Japanese>
+            <Chinese>諾琳"壞消息"極距狙擊步槍 (熱帶迷彩)</Chinese>
+            <Chinesesimp>诺琳 "坏消息" 极距狙击步枪（热带迷彩</Chinesesimp>
+            <Turkish>Noreen "Bad News" ULR (Tropic)</Turkish>
+            <Hungarian>Noreen "Bad News"ULR (Tropikus)</Hungarian>
         </Key>
         <Key ID="STR_Skua_Weapon_Retextures_DMR_05_ghex_Name">
             <English>Cyrus (Green Hex)</English>
+        </Key>
+        <Key ID="STR_Skua_Weapon_Retextures_LMG_Negev_blk_Name">
+            <English>Negev NG7 (Black)</English>
+        </Key>
+        <Key ID="STR_Skua_Weapon_Retextures_LMG_Zafir_blk_Name">
+            <English>Negev NG7-R (Black)</English>
         </Key>
         <Key ID="STR_Skua_Weapon_Retextures_LRR_sand_Name">
             <English>M200 Intervention (Sand)</English>
@@ -42,11 +45,8 @@
         <Key ID="STR_Skua_Weapon_Retextures_MMG_01_black_Name">
             <English>HK121 (Black)</English>
         </Key>
-        <Key ID="STR_Skua_Weapon_Retextures_LMG_Zafir_blk_Name">
-            <English>Negev NG7-R (Black)</English>
-        </Key>
-        <Key ID="STR_Skua_Weapon_Retextures_LMG_Negev_blk_Name">
-            <English>Negev NG7 (Black)</English>
+        <Key ID="STR_Skua_Weapon_Retextures_Pistol_Heavy_01_black_Name">
+            <English>FNX-45 Tactical (Black)</English>
         </Key>
     </Package>
 </Project>

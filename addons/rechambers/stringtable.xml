@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project name="Skua">
     <Package name="Rechambers">
+        <Key ID="STR_Skua_Rechambers_9mmC2_Name">
+            <English>Custom Covert II (9mm, Tan)</English>
+        </Key>
         <Key ID="STR_Skua_Rechambers_LMG_762x51_Desc_Short">
             <Original>Light Machine Gun&lt;br /&gt;Caliber: 7.62x51 mm</Original>
             <English>Light Machine Gun&lt;br /&gt;Caliber: 7.62x51 mm</English>
             <Czech>Lehký kulomet&lt;br /&gt;Ráže: 7,62x51 mm</Czech>
-            <German>Leichtes Maschinengewehr&lt;br /&gt;Kaliber: 7,62x51 mm</German>
-            <Russian>Ручной пулемет&lt;br /&gt;Калибр: 7,62x51 мм</Russian>
-            <Polish>Lekki karabin maszynowy&lt;br /&gt;Kaliber: 7,62x51 mm</Polish>
-            <Italian>Mitragliatrice leggera&lt;br /&gt;Calibro: 7,62x51 mm</Italian>
-            <Spanish>Ametralladora ligera&lt;br /&gt;Calibre: 7,62x51 mm</Spanish>
             <French>Mitrailleuse légère&lt;br /&gt;Calibre : 7,62x51 mm</French>
-            <Chinese>輕機槍&lt;br /&gt;口徑：7.62x51 mm</Chinese>
-            <Japanese>軽機関銃&lt;br /&gt;口径：7.62x51 mm</Japanese>
-            <Korean>경기관총(LMG)&lt;br /&gt;구경: 7.62x51mm</Korean>
+            <Spanish>Ametralladora ligera&lt;br /&gt;Calibre: 7,62x51 mm</Spanish>
+            <Italian>Mitragliatrice leggera&lt;br /&gt;Calibro: 7,62x51 mm</Italian>
+            <Polish>Lekki karabin maszynowy&lt;br /&gt;Kaliber: 7,62x51 mm</Polish>
             <Portuguese>Metralhadora leve&lt;br /&gt;Calibre: 7,62 x 51 mm</Portuguese>
-        </Key>
-        <Key ID="STR_Skua_Rechambers_9mmC2_Name">
-            <English>Custom Covert II (9mm, Tan)</English>
+            <Russian>Ручной пулемет&lt;br /&gt;Калибр: 7,62x51 мм</Russian>
+            <German>Leichtes Maschinengewehr&lt;br /&gt;Kaliber: 7,62x51 mm</German>
+            <Korean>경기관총(LMG)&lt;br /&gt;구경: 7.62x51mm</Korean>
+            <Japanese>軽機関銃&lt;br /&gt;口径：7.62x51 mm</Japanese>
+            <Chinese>輕機槍&lt;br /&gt;口徑：7.62x51 mm</Chinese>
         </Key>
     </Package>
 </Project>

@@ -14,12 +14,13 @@ class CfgWeapons {
     class hgun_ACPC2_F: Pistol_Base_F {
         class WeaponSlotsInfo;
     };
+
     class hgun_9mmC2_F: hgun_ACPC2_F {
         displayName = CSTRING(9mmC2_Name);
         descriptionShort = "$STR_A3_CfgWeapons_hgun_P071";
         baseWeapon = QUOTE(9mmC2_F);
         magazines[] = {"16Rnd_9x21_Mag"};
-        magazineWell[] = {"CBA_9x19_Walther"};
+        magazineWell[] = {"CBA_9x19_Walther", "Pistol_9x21"};
         class WeaponSlotsInfo: WeaponSlotsInfo {
             class MuzzleSlot: asdg_MuzzleSlot_9MM {};
         };
