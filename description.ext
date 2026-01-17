@@ -1,0 +1,12 @@
+cba_settings_hasSettingsFile = 1;
+respawnOnStart = -1;
+allowProfileGlasses = 0;
+briefingName = "Skua Zeus";
+missionName = "Skua Zeus";
+
+class Header {
+	gameType = "Zeus";
+	minPlayers =  1;
+	maxPlayers = 100;
+};
+

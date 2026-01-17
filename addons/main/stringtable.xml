@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project name="Skua">
+    <Package name="Main">
+        <Container name="Overwrites">
+            <Key ID="STR_cba_keybinding_configureAddons">
+                <English>Mod Keybinds</English>
+            </Key>
+            <Key ID="STR_cba_settings_configureAddons">
+                <English>CBA Settings</English>
+            </Key>
+            <Key ID="STR_cba_settings_menu_button">
+                <English>CBA Settings</English>
+            </Key>
+        </Container>
+    </Package>
+</Project>

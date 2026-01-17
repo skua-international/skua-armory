@@ -5,17 +5,12 @@ mainprefix = "z"
 
 [files]
 include = [
+    "*.dll",
+    "*.so",
     "mod.cpp",
     "meta.cpp",
     "logo_skua_armory_ca.paa",
     "README.md"
-]
-
-[asc]
-enabled = true
-exclude = [
-    ".inc.sqf",
-    "/dev/"
 ]
 
 [version]

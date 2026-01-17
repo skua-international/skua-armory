@@ -76,8 +76,6 @@ class CfgWeapons {
         hiddenSelectionsTextures[] = {QPATHTOF(data\mx\XMX_Long_khk_co.paa)};
     };
 
-    class Pistol_Base_F;
-
     // Custom Covert II retextures
     class hgun_ACPC2_F;
     class ACPC2_classic_F: hgun_ACPC2_F {

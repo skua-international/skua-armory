@@ -1,6 +1,4 @@
 class CfgVehicles {
-    class Weapon_Bag_Base;
-
     class Man;
     class CAManBase: Man {
         class ACE_SelfActions {
@@ -17,9 +15,7 @@ class CfgVehicles {
 
     class Air;
     class Helicopter: Air {
-        class ACE_Actions {
-            class ACE_MainActions;
-        };
+        class ACE_Actions;
     };
     class Helicopter_Base_F: Helicopter {
         class ACE_Actions: ACE_Actions {

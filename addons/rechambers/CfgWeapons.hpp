@@ -1,6 +1,4 @@
 class CfgWeapons {
-    class Rifle_Long_Base_F;
-
     class LMG_Zafir_F;
     class LMG_Negev_F: LMG_Zafir_F {
         displayName = "$STR_ACE_RealisticNames_LMG_Zafir_Name";

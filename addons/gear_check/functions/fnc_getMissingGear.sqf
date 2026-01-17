@@ -97,7 +97,7 @@ if (GVAR(requireRadio)) then {
     [["ACRE_BF888S"], _unitItems, 1, ["Baofeng 888S", "Baofeng 888S"], _missing, _missingClasses] call FUNC(countItem);
 };
 
-[["ACE_fieldDressing","ACE_packingBandage"], _unitItems,
+[["ACE_packingBandage", "ACE_fieldDressing"], _unitItems,
                                       15, ["Bandage (Basic/Packing)", "Bandages (Basic/Packing)"], _missing, _missingClasses] call FUNC(countItem);
 [["ACE_splint"], _unitItems,           2, ["Splint", "Splints"], _missing, _missingClasses] call FUNC(countItem);
 [["ACE_morphine"], _unitItems,         2, ["Morphine Autoinjector", "Morphine Autoinjectors"], _missing, _missingClasses] call FUNC(countItem);
@@ -119,7 +119,7 @@ if ((_unit getSlotItemName SLOT_MAP) isEqualTo "") then {
 };
 
 if ((_unit getSlotItemName SLOT_GPS) isEqualTo "") then {
-    _missing pushBack "A GPS";
+    _missing pushBack "A GPS or cTab";
     _missingClasses pushBack ["#belt", ["ItemAndroid"], 1];
 };
 
@@ -129,7 +129,7 @@ if ((_unit getSlotItemName SLOT_COMPASS) isEqualTo "") then {
 };
 
 if ((_unit getSlotItemName SLOT_WATCH) isEqualTo "") then {
-    _missing pushBack "A Watch";
+    _missing pushBack "A Watch or Geiger Counter";
     _missingClasses pushBack ["#belt", ["ItemWatch"], 1];
 };
 

@@ -1,0 +1,15 @@
+[package]
+name = "skua"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+name = "skua"
+crate-type = ["cdylib"]
+
+[dependencies]
+arma-rs = { version = "1.12.1", features = ["uuid"] }
+uuid = { version = "1.19.0", features = ["v7"] }
+deadpool-postgres = { version = "0.14.1"}
+tokio-postgres = { version = "0.7.15" }
+tokio = { version = "1.49.0", features = ["full"] }

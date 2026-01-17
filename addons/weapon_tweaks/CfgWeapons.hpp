@@ -1,5 +1,4 @@
 class Mode_FullAuto;
-class Mode_Burst;
 class Mode_SemiAuto;
 
 class CfgWeapons {

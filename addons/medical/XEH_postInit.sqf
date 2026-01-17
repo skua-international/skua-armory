@@ -12,6 +12,14 @@
     };
 }] call CBA_fnc_addEventHandler;
 
+[QACEGVAR(medical_treatment,cprLocal), {
+    params ["", "_patient"];
+    
+    if !(_patient isNil QACEGVAR(medical_statemachine,cardiacArrestTimeLeft)) then {
+        _patient call FUNC(resetCardiacArrestTime);
+    };
+}] call CBA_fnc_addEventHandler;
+
 private _medicalVehicleAction = [QGVAR(vehicleAction), "Make Medical Vehicle", "\z\ace\addons\medical_gui\ui\cross.paa", {
     _target setVariable [QACEGVAR(medical,isMedicalVehicle), true, true]
 }, {

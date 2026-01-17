@@ -6,10 +6,12 @@ class ACEGVAR(medical_treatment,actions) {
         medicRequired = 0;
         allowSelfTreatment = 1;
     };
+
     class PlasmaIV_250: PlasmaIV {
         medicRequired = 0;
         allowSelfTreatment = 1;
     };
+
     class SalineIV_250: SalineIV {
         medicRequired = 0;
         allowSelfTreatment = 1;

@@ -4,9 +4,7 @@ class CfgWeapons {
     class Uniform_Base: ItemCore {
         class ItemInfo;
     };
-    class Vest_Camo_Base: ItemCore {
-        class ItemInfo;
-    };
+    class Vest_Camo_Base;
 
     // Uniforms
     #include "uniforms.hpp"

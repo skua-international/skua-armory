@@ -1,0 +1,12 @@
+respawnOnStart = -1;
+allowProfileGlasses = 0;
+onLoadName = "Your Mission Name";
+onLoadMission = "Mission Description shown in the loading screen.";
+author = "Your name";
+briefingName = "Your Mission Name Again";
+
+class Header {
+	gameType = "Zeus";
+	minPlayers =  1;
+	maxPlayers = 17;
+};
