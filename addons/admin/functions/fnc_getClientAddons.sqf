@@ -2,6 +2,7 @@
 /*
  * Author: LinkIsGrim
  * Ask the server for a client's addon list.
+ * Must be run scheduled.
  *
  * Arguments:
  * 0: UID (Steam ID) of client <STRING>
@@ -10,14 +11,16 @@
  * List of extra addons, list of missing addons on client <ARRAY of ARRAY of STRING>
  *
  * Example:
- * call skua_admin_fnc_getClientAddons;
+ * spawn skua_admin_fnc_getClientAddons;
  *
  * Public: No
  */
 
-#define TIMEOUT_SECS_GET_ADDONS 1
+#define TIMEOUT_SECS_GET_ADDONS 5
 
 params ["_uid"];
+
+if (!canSuspend) exitWith {};
 
 // Create a temporary namespace to receive the response
 private _namespace = true call CBA_fnc_createNamespace;
@@ -30,7 +33,7 @@ private _varName = format [QGVAR(clientAddons_%1), _uid];
 private _startTime = diag_tickTime;
 private _deadline = _startTime + TIMEOUT_SECS_GET_ADDONS;
 
-while {_namespace isNil _varName && (diag_tickTime < _deadline)} do {}; // block
+waitUntil {sleep 0.1; !(_namespace isNil _varName) || (diag_tickTime > _deadLine)};
 
 if (_namespace isNil _varName) exitWith {
     ERROR_1("Timed out waiting for addon list of client with UID %1",_uid);

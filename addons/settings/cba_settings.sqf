@@ -44,7 +44,7 @@ ace_common_deployedSwayFactor = 0.25;
 ace_common_enableSway = true;
 ace_common_magneticDeclination = true;
 ace_common_restedSwayFactor = 0.5;
-ace_common_swayFactor = 0.5;
+ace_common_swayFactor = 0.15;
 
 // ACE Cook-off
 ace_cookoff_ammoCookoffDuration = 0.5;
@@ -268,9 +268,9 @@ ace_nametags_showPlayerRanks = false;
 // ACE Nightvision
 ace_nightvision_aimDownSightsBlur = 1;
 ace_nightvision_disableNVGsWithSights = false;
-ace_nightvision_effectScaling = 1;
-ace_nightvision_fogScaling = 1;
-ace_nightvision_noiseScaling = 1;
+ace_nightvision_effectScaling = 0.75;
+ace_nightvision_fogScaling = 0.3;
+ace_nightvision_noiseScaling = 0.5;
 
 // ACE Overheating
 ace_overheating_cookoffCoef = 0;
