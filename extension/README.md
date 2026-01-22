@@ -28,3 +28,15 @@ mv target/x86_64-pc-windows-msvc/release/skua.dll ./../skua_x64.dll # for Window
 
 mv target/x86_64-unknown-linux-gnu/release/libskua.so ./../skua_x64.so # for Linux
 ```
+
+## Running tests
+
+```bash
+export DATABASE_HOST=127.0.0.1
+export DATABASE_PORT=55432
+export DATABASE_USER=postgres
+export DATABASE_PASSWORD=postgres
+export DATABASE_NAME=postgres
+
+cargo test -- --test-threads=1
+```

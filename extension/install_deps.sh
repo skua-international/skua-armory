@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo "Installing rustfmt for formatting"
+rustup component add rustfmt
+
 echo "Installing cross for cross-compilation"
 cargo install cross
 

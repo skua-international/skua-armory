@@ -8,3 +8,5 @@ releases
 .hemttprivatekey
 target
 *.zip
+pgadmin_data
+postgres_data

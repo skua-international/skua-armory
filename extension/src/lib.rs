@@ -1,13 +1,13 @@
 use arma_rs::{Extension, arma};
 
+pub mod database;
 mod uuid;
-mod database;
 
 // starts here
 #[arma]
 fn init() -> Extension {
     Extension::build()
-    .group("database", database::group())
-        .command("uuid", uuid::new_uuid_v7) // "skua" callExtension ["uuid", []]
+        .command("uuid", uuid::new_uuid_v7)
+        .group("database", database::group())
         .finish()
 }
