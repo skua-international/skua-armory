@@ -1,5 +1,14 @@
-PREP(extCallback_database);
+PREP(bootstrap);
+PREP(handleBootstrap);
+PREP(handleExtensionCallback);
+PREP(handleLoadPlayerData);
+PREP(heartbeat);
+PREP(loadSettings);
+PREP(loadPlayerData);
+PREP(request_loadPlayerData);
 PREP(saveObject_position);
 PREP(saveObject);
+PREP(savePlayer);
 PREP(saveUnit_loadout);
 PREP(saveUnit_medical);
+PREP(saveUnit);

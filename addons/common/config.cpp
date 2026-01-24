@@ -2,7 +2,9 @@
 
 class CfgPatches {
     class ADDON {
-        units[] = {};
+        units[] = {
+            QCLASS(module),
+        };
         weapons[] = {};
         requiredVersion = REQUIRED_VERSION;
         requiredAddons[] = {
@@ -24,6 +26,9 @@ class CfgPatches {
 
 enableTargetDebug = 1;
 
+class CBA_Extended_EventHandlers;
+
+#include "CfgVehicles.hpp"
 #include "CfgEditorCategories.hpp"
 #include "CfgEventHandlers.hpp"
 #include "CfgFunctions.hpp"

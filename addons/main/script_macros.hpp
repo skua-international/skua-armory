@@ -1,5 +1,4 @@
 #include "\z\ace\addons\main\script_macros.hpp"
-#include "\z\skua\addons\main\script_macros_enums.hpp"
 
 // BEGIN ACE3 reference macros
 // base prefix: \z\
