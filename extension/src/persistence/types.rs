@@ -4,7 +4,7 @@
 
 use arma_rs::{FromArma, IntoArma, loadout::Loadout};
 use serde::{Deserialize, Serialize};
-use serde_json::Value;
+use serde_json::Value as JsonValue;
 use uuid::Uuid;
 
 use crate::domain::PlayerId;
@@ -28,7 +28,7 @@ impl<'de> Deserialize<'de> for LoadoutWrapper {
     where
         D: serde::Deserializer<'de>,
     {
-        let json_value = serde_json::Value::deserialize(deserializer)?;
+        let json_value = JsonValue::deserialize(deserializer)?;
         let string = json_value.to_string();
         let loadout = Loadout::from_arma(string).map_err(serde::de::Error::custom)?;
         Ok(LoadoutWrapper(loadout))
@@ -51,7 +51,7 @@ pub struct ObjectData {
 #[derive(Debug, Serialize, Deserialize, FromArma)]
 pub struct UnitData {
     pub loadout: LoadoutWrapper,
-    pub medical_state: Value,
+    pub medical_state: JsonValue,
 }
 
 /// Data specific to players.
@@ -103,7 +103,7 @@ pub enum PersistedObject {
 
 impl FromArma for PersistedObject {
     fn from_arma(s: String) -> Result<Self, arma_rs::FromArmaError> {
-        let json_value: serde_json::Value =
+        let json_value: JsonValue =
             serde_json::from_str(&s).map_err(arma_rs::FromArmaError::custom)?;
         serde_json::from_value(json_value).map_err(arma_rs::FromArmaError::custom)
     }

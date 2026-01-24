@@ -8,8 +8,8 @@ use std::sync::LazyLock;
 /// Global Tokio runtime for spawning async tasks.
 ///
 /// # Usage
-/// ```rust
-/// use crate::core::RUNTIME;
+/// ```ignore
+/// use skua::core::RUNTIME;
 ///
 /// RUNTIME.spawn(async {
 ///     // async work here

@@ -19,8 +19,9 @@ use tracing::error;
 /// The error is logged with file/line information and wrapped in a QueryResult.
 ///
 /// # Example
-/// ```rust
-/// use crate::error::transient_error;
+/// ```ignore
+/// use skua::error::transient_error;
+/// use skua::QueryResult;
 ///
 /// async fn do_work() -> QueryResult {
 ///     match some_operation().await {
