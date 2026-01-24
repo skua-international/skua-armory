@@ -1,0 +1,9 @@
+repos:
+  - repo: local
+    hooks:
+      - id: no-uncommented-disable-compile-cache
+        name: Check for uncommented DISABLE_COMPILE_CACHE
+        entry: .pre-commit-hooks/check-compile-cache.sh
+        language: script
+        pass_filenames: false
+        always_run: true

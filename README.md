@@ -9,6 +9,12 @@ Authors list in `README.md` of each component is the original author of that com
 ## Building
 Clone and build with HEMTT.
 
+## Development
+Install pre-commit hooks:
+```bash
+pre-commit install
+```
+
 ## Contributing
 Don't.
 
