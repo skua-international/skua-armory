@@ -1,13 +1,55 @@
+// src/extension_new/lib.rs
+//
+// Arma 3 Skua extension entry point.
+//
+// This extension provides database persistence for Arma 3 missions,
+// including player data, vehicles, and world state.
+
 use arma_rs::{Extension, arma};
+use uuid::Uuid;
 
+// Core infrastructure
+pub mod core;
+pub use core::{RUNTIME, SESSION_ID};
+
+// Error handling
+pub mod error;
+pub use error::{DbError, QueryError, QueryResult, QueryState};
+
+// Domain types
+pub mod domain;
+pub use domain::{CampaignId, PlayerId, SessionId};
+
+// Feature modules
 pub mod database;
-mod uuid;
+pub mod logging;
+pub mod persistence;
 
-// starts here
+/// Extension entry point.
 #[arma]
 fn init() -> Extension {
-    Extension::build()
-        .command("uuid", uuid::new_uuid_v7)
+    let ext = Extension::build()
+        // Top-level commands
+        .command("uuid", Uuid::now_v7)
+        .command("diagnostics", diagnostics)
+        // Command groups
+        .group("logger", logging::group())
         .group("database", database::group())
-        .finish()
+        .group("persistence", persistence::group())
+        .finish();
+
+    // Initialize logging with extension context
+    logging::init(ext.context());
+
+    ext
+}
+
+/// Get diagnostics information about the extension runtime.
+fn diagnostics() -> String {
+    use std::collections::HashMap;
+
+    let mut output: HashMap<&str, String> = HashMap::new();
+    output.insert("runtime", format!("Tokio Runtime: {:?}", RUNTIME.handle()));
+    output.insert("session_id", SESSION_ID.to_string());
+    format!("{:#?}", output)
 }

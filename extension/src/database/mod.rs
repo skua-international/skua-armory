@@ -1,20 +1,21 @@
-use {
-    crate::database::{bootstrap::bootstrap, db::get_database_state},
-    arma_rs::Group,
-};
+// src/extension_new/database/mod.rs
+//
+// Database connectivity and schema management.
+//
+// This module provides:
+// - Connection pool management (`pool`)
+// - Schema bootstrap operations (`schema`)
+// - Arma-callable commands (`commands`)
 
-mod bootstrap;
-mod db;
-mod test_support;
+mod commands;
+mod pool;
+mod schema;
+mod sql;
+mod state;
+
+#[cfg(test)]
 mod tests;
-mod types;
 
-/* ============================
- * Command Group
- * ============================ */
-
-pub fn group() -> Group {
-    Group::new()
-        .command("bootstrap", bootstrap)
-        .command("state", get_database_state)
-}
+pub use commands::group;
+pub use pool::{Database, get_client, get_db};
+pub use state::DatabaseState;

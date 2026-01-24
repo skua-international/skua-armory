@@ -10,9 +10,11 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: changeit
     volumes:
-      - ./postgres_data:/var/lib/postgresql
+      - postgres_data:/var/lib/postgresql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U procyon"]
       interval: 10s
       timeout: 5s
       retries: 5
+volumes:
+  postgres_data:
