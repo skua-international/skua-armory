@@ -7,13 +7,13 @@ use tokio_postgres::Client;
 use tracing::{info, instrument};
 use uuid::Uuid;
 
+use super::heartbeat;
 use super::pool::{get_client, get_db};
 use super::sql::{campaign, master, session};
 use super::state::DatabaseState;
-use crate::core::{RUNTIME, SESSION_ID};
+use crate::core::{ContextProvider, RUNTIME, SESSION_ID};
 use crate::error::{QueryResult, QueryState, transient_error};
 
-use arma_rs::Context;
 use regex::Regex;
 
 /// Sanitizes a key for use as a schema name.
@@ -258,6 +258,9 @@ pub async fn do_bootstrap(
 
     db.set_state(DatabaseState::ConnectedInit);
 
+    // Start background heartbeat task
+    heartbeat::start();
+
     info!(
         session_id = %session_id,
         campaign_id = ?campaign_schema,
@@ -269,7 +272,11 @@ pub async fn do_bootstrap(
 }
 
 /// Entry point for bootstrap (Arma command).
-pub fn bootstrap(ctx: Context, campaign_id: String, terrain: String) -> QueryState {
+pub fn bootstrap<T: ContextProvider + Send + Sync + 'static>(
+    ctx: T,
+    campaign_id: String,
+    terrain: String,
+) -> QueryState {
     let session_id = *SESSION_ID;
     let campaign = if campaign_id.is_empty() {
         None
@@ -288,34 +295,12 @@ pub fn bootstrap(ctx: Context, campaign_id: String, terrain: String) -> QuerySta
     QueryState::Processing
 }
 
-/// Heartbeat command - keeps session alive.
-pub fn heartbeat(ctx: Context) -> QueryState {
-    RUNTIME.spawn(async move {
-        let client = match get_client().await {
-            Ok(c) => c,
-            Err(e) => {
-                let result = transient_error("Failed to get client", e);
-                let _ = ctx.callback_data("skua:database", "heartbeat", result);
-                return;
-            }
-        };
-
-        let sql = "UPDATE skua_master.sessions SET is_active = TRUE WHERE session_id = $1";
-        if let Err(e) = client.execute(sql, &[&*SESSION_ID]).await {
-            let result = transient_error("Failed to update heartbeat", e);
-            let _ = ctx.callback_data("skua:database", "heartbeat", result);
-            return;
-        }
-
-        let _ = ctx.callback_data("skua:database", "heartbeat", QueryResult::done());
-    });
-
-    QueryState::Processing
-}
-
 /// End session command.
-pub fn end_session(ctx: Context) -> QueryState {
+pub fn end_session<T: ContextProvider + Send + Sync + 'static>(ctx: T) -> QueryState {
     let session_uuid = *SESSION_ID;
+
+    // Stop the heartbeat task
+    heartbeat::stop();
 
     RUNTIME.spawn(async move {
         let client = match get_client().await {

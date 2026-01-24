@@ -47,6 +47,15 @@ pub struct ObjectData {
     pub last_world: String,
 }
 
+/// Position and orientation data for an object.
+/// Used for serialization.
+#[derive(Debug, Serialize, Deserialize)]
+pub struct ObjectPosition {
+    pub position: (f64, f64, f64),
+    pub orientation: ((f64, f64, f64), (f64, f64, f64)),
+    pub direction: f64,
+}
+
 /// Data specific to units (AI and players).
 #[derive(Debug, Serialize, Deserialize, FromArma)]
 pub struct UnitData {

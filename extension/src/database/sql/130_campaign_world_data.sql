@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS "skua_campaign_${campaign_id}".world_data (
     uuid        UUID NOT NULL,
     world       TEXT NOT NULL,
     classname   TEXT NOT NULL,
-    position    TEXT NOT NULL,
+    position    JSONB NOT NULL,
 
     PRIMARY KEY (uuid, world)
 );

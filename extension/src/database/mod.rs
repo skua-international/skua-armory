@@ -8,6 +8,7 @@
 // - Arma-callable commands (`commands`)
 
 mod commands;
+mod heartbeat;
 mod pool;
 mod schema;
 mod sql;
@@ -17,5 +18,8 @@ mod state;
 mod tests;
 
 pub use commands::group;
-pub use pool::{Database, get_client, get_db};
+pub use pool::{Database, get_client, get_db, get_state};
 pub use state::DatabaseState;
+
+#[cfg(test)]
+pub use schema::{bootstrap_campaign, bootstrap_master, bootstrap_session};

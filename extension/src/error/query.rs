@@ -3,10 +3,14 @@
 // Query state and result types for Arma interop.
 // These types represent the outcome of async operations.
 
+use std::error::Error;
+use std::fmt::Display;
+
 use arma_rs::{FromArma, IntoArma};
+use serde::Serialize;
 
 /// State of an async query/operation.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
 #[repr(u8)]
 pub enum QueryState {
     /// Operation is in progress (async)
@@ -53,7 +57,7 @@ impl FromArma for QueryState {
 }
 
 /// Error details for failed queries.
-#[derive(Debug, IntoArma, FromArma)]
+#[derive(Debug, IntoArma, FromArma, Serialize)]
 pub struct QueryError {
     #[arma(to_string)]
     pub code: String,
@@ -63,8 +67,16 @@ pub struct QueryError {
     pub location: String,
 }
 
+impl Display for QueryError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}: {} at {}", self.code, self.message, self.location)
+    }
+}
+
+impl Error for QueryError {}
+
 /// Result of an async query/operation.
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct QueryResult {
     pub state: QueryState,
     pub error: Option<QueryError>,

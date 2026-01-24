@@ -6,6 +6,7 @@ use std::fmt::Display;
 
 use arma_rs::{FromArma, IntoArma};
 use serde::{Deserialize, Serialize};
+use tokio_postgres::types::ToSql;
 use uuid::Uuid;
 
 /// Steam ID for a player.
@@ -36,9 +37,43 @@ impl From<String> for PlayerId {
     }
 }
 
+impl From<PlayerId> for String {
+    fn from(value: PlayerId) -> Self {
+        value.0.to_string()
+    }
+}
+
 impl IntoArma for PlayerId {
     fn to_arma(&self) -> arma_rs::Value {
         arma_rs::Value::String(self.0.to_string())
+    }
+}
+
+impl ToSql for PlayerId {
+    fn to_sql(
+        &self,
+        ty: &tokio_postgres::types::Type,
+        out: &mut tokio_postgres::types::private::BytesMut,
+    ) -> Result<tokio_postgres::types::IsNull, Box<dyn std::error::Error + Sync + Send>>
+    where
+        Self: Sized,
+    {
+        <String as ToSql>::to_sql(&self.0.to_string(), ty, out)
+    }
+
+    fn accepts(ty: &tokio_postgres::types::Type) -> bool
+    where
+        Self: Sized,
+    {
+        <String as ToSql>::accepts(ty)
+    }
+
+    fn to_sql_checked(
+        &self,
+        ty: &tokio_postgres::types::Type,
+        out: &mut tokio_postgres::types::private::BytesMut,
+    ) -> Result<tokio_postgres::types::IsNull, Box<dyn std::error::Error + Sync + Send>> {
+        <String as ToSql>::to_sql_checked(&self.0.to_string(), ty, out)
     }
 }
 
@@ -46,9 +81,27 @@ impl IntoArma for PlayerId {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, FromArma, Serialize, Deserialize)]
 pub struct CampaignId(Uuid);
 
+impl CampaignId {
+    /// Returns true if this is the nil UUID (no campaign).
+    pub fn is_nil(&self) -> bool {
+        self.0.is_nil()
+    }
+
+    /// Returns the schema key format (hyphens replaced with underscores).
+    pub fn to_schema_key(&self) -> String {
+        self.0.to_string().replace('-', "_")
+    }
+}
+
 impl From<Uuid> for CampaignId {
     fn from(value: Uuid) -> Self {
         CampaignId(value)
+    }
+}
+
+impl From<CampaignId> for Uuid {
+    fn from(value: CampaignId) -> Self {
+        value.0
     }
 }
 
@@ -74,9 +127,22 @@ impl IntoArma for CampaignId {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, FromArma, Serialize, Deserialize)]
 pub struct SessionId(Uuid);
 
+impl SessionId {
+    /// Returns the schema key format (hyphens replaced with underscores).
+    pub fn to_schema_key(&self) -> String {
+        self.0.to_string().replace('-', "_")
+    }
+}
+
 impl From<Uuid> for SessionId {
     fn from(value: Uuid) -> Self {
         SessionId(value)
+    }
+}
+
+impl From<SessionId> for Uuid {
+    fn from(value: SessionId) -> Self {
+        value.0
     }
 }
 

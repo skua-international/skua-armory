@@ -5,7 +5,7 @@ CREATE OR REPLACE FUNCTION skua_master.promote_ephemeral_player_data(
     p_world TEXT,
     p_steam_id BIGINT,
     p_loadout TEXT,
-    p_position TEXT,
+    p_position JSONB,
     p_medical_data JSONB,
     p_saved_at TIMESTAMPTZ
 ) RETURNS VOID AS $$

@@ -7,4 +7,4 @@ mod commands;
 mod types;
 
 pub use commands::group;
-pub use types::{ObjectData, PersistedObject, PlayerData, UnitData, VehicleData};
+pub use types::{ObjectData, ObjectPosition, PersistedObject, PlayerData, UnitData, VehicleData};

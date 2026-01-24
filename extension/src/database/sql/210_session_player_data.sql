@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS "skua_session_${session_id}".player_data (
     world           TEXT NOT NULL,
     campaign_id     TEXT,  -- Optional, triggers promotion if set
     loadout         TEXT,
-    position        TEXT,
+    position        JSONB,
     medical_data    JSONB,
     saved_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     deadline        TIMESTAMPTZ NOT NULL DEFAULT NOW() + INTERVAL '30 minutes'
