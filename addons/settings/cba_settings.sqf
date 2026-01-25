@@ -519,3 +519,32 @@ zen_building_markers_enabled = true;
 // ZHC Settings
 zhc_offload_Verbosity = 1;
 zhc_stat_MapFpsPos = 1;
+
+
+// Improved Melee System (Client Settings)
+IMS_CustomCamer_Y = 3;
+IMS_CustomCameraUsedByUserAllowed = true;
+IMS_EnablePlayerSounds = true;
+IMS_HudCoordinate_X = 0.01;
+IMS_HudCoordinate_Y = 0.9;
+IMS_ShowHealthHud = true;
+
+// Improved Melee System (Server Settings)
+force IMS_AddKnifeToUnit = false;
+force IMS_BayonetDistance = "6";
+force IMS_BayonetOnAI = false;
+force IMS_BluntWeapon = false;
+force IMS_CustomAIHEALTH = "2";
+force IMS_DamageMultiplierParam = "1";
+force IMS_DamageMultiplierParamPlayer = "1";
+force IMS_ExecutionChanceParametr = "20";
+force IMS_isFistsAllowd = true;
+force IMS_isHumansCanHitSM = false;
+force IMS_isImsCanHitAllies = true;
+force IMS_isKickButtInstaKill = true;
+force IMS_isStaticDeaths = true;
+force IMS_RifleDodgeSet = true;
+force IMS_StealthAI_Ears = 15;
+force IMS_StealthAI_Eyes = 40;
+force IMS_WBK_CUSTOMCAMSERVER = false;
+force IMS_WBK_MAINFPTP = true;
