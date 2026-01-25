@@ -10,7 +10,8 @@ class CfgPatches {
             "skua_common",
             "ace_zeus",
             "zen_modules",
-            "zen_context_menu"
+            "zen_context_menu",
+            "acre_sys_zeus"
         };
         author = "LinkIsGrim";
         name = COMPONENT_NAME;
