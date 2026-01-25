@@ -6,4 +6,7 @@ PREP_RECOMPILE_START;
 #include "XEH_PREP.hpp"
 PREP_RECOMPILE_END;
 
+// Pre-init to avoid nil
+GVAR(speakingThroughZeus) = false;
+
 ADDON = true;
