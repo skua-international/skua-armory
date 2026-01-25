@@ -1,20 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project name="Skua">
-    <Package name="Equipment_Retextures">
-        <Key ID="STR_Skua_Equipment_Retextures_ExpandedAssaultPack_blk_Name">
-            <English>Expanded Assault Pack (Black)</English>
-        </Key>
-        <Key ID="STR_Skua_Equipment_Retextures_ExpandedAssaultPack_cbr_Name">
-            <English>Expanded Assault Pack (Coyote)</English>
-        </Key>
-        <Key ID="STR_Skua_Equipment_Retextures_ExpandedAssaultPack_rgr_Name">
-            <English>Expanded Assault Pack (Green)</English>
-        </Key>
-        <Key ID="STR_Skua_Equipment_Retextures_ExpandedAssaultPack_tna_Name">
-            <English>Expanded Assault Pack (Tropic)</English>
-        </Key>
-        <Key ID="STR_Skua_Equipment_Retextures_ExpandedAssaultPack_wdl_Name">
-            <English>Expanded Assault Pack (Woodland)</English>
-        </Key>
-    </Package>
+    <Package name="Equipment_Retextures"></Package>
 </Project>

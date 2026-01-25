@@ -16,4 +16,10 @@ class ACEGVAR(medical_treatment,actions) {
         medicRequired = 0;
         allowSelfTreatment = 1;
     };
+
+    // ace_medical_status_fnc_isInStableCondition
+    class BasicBandage;
+    class PersonalAidKit: BasicBandage {
+        condition = QUOTE(_patient call FUNC(canPAK));
+    };
 };

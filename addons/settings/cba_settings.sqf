@@ -104,7 +104,7 @@ ace_hearing_autoAddEarplugsToUnits = 0;
 ace_hearing_earplugsVolume = 0.5;
 ace_hearing_enableCombatDeafness = true;
 ace_hearing_enabledForZeusUnits = false;
-ace_hearing_explosionDeafnessCoefficient = 0.6;
+ace_hearing_explosionDeafnessCoefficient = 0.3;
 ace_hearing_unconsciousnessVolume = 0.4;
 
 // ACE Interaction
@@ -325,7 +325,7 @@ ace_repair_wheelRepairRequiredItems = [];
 
 // ACE Respawn
 ace_respawn_removeDeadBodiesDisconnected = false;
-ace_respawn_savePreDeathGear = false;
+ace_respawn_savePreDeathGear = true; // TODO: remove with shop
 
 // ACE Scopes
 ace_scopes_correctZeroing = true;
@@ -504,6 +504,9 @@ grad_trenches_functions_shortEnvelopeDigTime = 10;
 grad_trenches_functions_smallEnvelopeDigTime = 8;
 grad_trenches_functions_timeoutToDecay = 60;
 grad_trenches_functions_vehicleEnvelopeDigTime = 60;
+
+// Immersive Cigs - AI
+force cigs_ai_set_cigsonai_chance = 0.05;
 
 // KJW's Medical Expansion
 KJW_MedicalExpansion_core_bloodIncompatibilityEnabled = true;
