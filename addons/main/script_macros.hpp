@@ -2,6 +2,7 @@
 #include "\z\skua\addons\main\script_macros_enums.hpp"
 
 // BEGIN ACE3 reference macros
+// base prefix: \z\
 
 #define ACE_PREFIX ace
 
@@ -22,6 +23,20 @@
 #define QACEPATHTOF(component,path) QUOTE(ACEPATHTOF(component,path))
 
 // END ACE3 reference macros
+
+// BEGIN Zeus Enhanced reference macros
+// base prefix: \x\
+
+#define ZEN_PREFIX zen
+
+#define ZEN_ADDON(component)        DOUBLES(ZEN_PREFIX,component)
+
+#define ZENGVAR(module,var)         TRIPLES(ZEN_PREFIX,module,var)
+#define QZENGVAR(module,var)        QUOTE(ZENGVAR(module,var))
+#define ZENFUNC(module,function)    TRIPLES(DOUBLES(ZEN_PREFIX,module),fnc,function)
+#define QZENFUNC(module,function)   QUOTE(ZENFUNC(module,function))
+#define ZENPATHTOF(component,path) \x\zen\addons\component\path
+#define QZENPATHTOF(component,path) QUOTE(ZENPATHTOF(component,path))
 
 #define CLASS(classname) DOUBLES(PREFIX,classname)
 #define QCLASS(classname) QUOTE(CLASS(classname))
