@@ -15,4 +15,4 @@
  * Public: No
  */
 
-objNull call ZENFUNC(modules,hideZeus);
+objNull call ZENFUNC(modules,moduleHideZeus);
