@@ -7,10 +7,6 @@ call FUNC(notifyClientConnected);
 
 GVAR(camoCoefMap) = createHashMap;
 
-if (isServer) then {
-    GVAR(zeusChannel) = radioChannelCreate [[248/256,148/256,6/256,1], "Zeus Chat", "Zeus (%UNIT_NAME)", [], false];
-};
-
 ["CAManBase", "SlotItemChanged", {
     params ["_unit", "_name", "_slot", "_assigned"];
     if (!local _unit || {_slot != TYPE_UNIFORM}) exitWith {};
@@ -28,14 +24,3 @@ if (isServer) then {
 
     _unit setUnitTrait ["camouflageCoef", _camoCoef];
 }] call CBA_fnc_addClassEventHandler;
-
-// Show the chat hint and add to the Zeus channel
-[QACEGVAR(zeus,zeusUnitAssigned), {
-    params ["_logic", "_unit"];
-
-    systemChat format ["Zeus Module assigned to %1", name _unit];
-
-    if (isServer) then {
-        GVAR(zeusChannel) radioChannelAdd [_unit];
-    };
-}] call CBA_fnc_addEventHandler;

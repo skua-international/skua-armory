@@ -1,9 +1,9 @@
-#define COMPONENT medical
-#define COMPONENT_BEAUTIFIED Medical
+#define COMPONENT diwako_dui_sort_change
+#define COMPONENT_BEAUTIFIED DUI Sort Change
 #include "\z\skua\addons\main\script_mod.hpp"
 
 // #define DEBUG_MODE_FULL
-#define DISABLE_COMPILE_CACHE
+// #define DISABLE_COMPILE_CACHE
 // #define ENABLE_PERFORMANCE_COUNTERS
 
 #ifdef DEBUG_ENABLED_MAIN
@@ -15,4 +15,3 @@
 #endif
 
 #include "\z\skua\addons\main\script_macros.hpp"
-#include "\z\skua\addons\medical\script_macros_medical.hpp"

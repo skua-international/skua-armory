@@ -16,3 +16,10 @@ class CfgPatches {
 
 // Prevents setting changes from persisting between server restarts on dedicated server
 cba_settings_volatile = 1;
+
+// Dummy: make HEMTT not complain about unused stringtable entries
+skua_settings_unused[] = {
+    "$STR_cba_keybinding_configureaddons",
+    "$STR_cba_settings_configureaddons",
+    "$STR_cba_settings_menu_button"
+};
