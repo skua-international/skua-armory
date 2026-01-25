@@ -38,6 +38,8 @@
 #define ZENPATHTOF(component,path) \x\zen\addons\component\path
 #define QZENPATHTOF(component,path) QUOTE(ZENPATHTOF(component,path))
 
+// END Zeus Enhanced reference macros
+
 #define CLASS(classname) DOUBLES(PREFIX,classname)
 #define QCLASS(classname) QUOTE(CLASS(classname))
 #define SLOT_GOGGLES 603
