@@ -1,4 +1,4 @@
-// src/extension_new/persistence/commands.rs
+// src/extension/persistence/commands.rs
 //
 // Arma-callable persistence commands.
 
@@ -6,19 +6,19 @@ use arma_rs::{Context, Group};
 use tracing::{error, info, instrument};
 
 use super::types::{ObjectData, ObjectPosition, PersistedObject, PlayerData, UnitData};
-use crate::core::{ContextProvider, RUNTIME};
+use crate::core::RUNTIME;
 use crate::database::{DatabaseState, get_client, get_state};
 use crate::domain::{CampaignId, SessionId};
 use crate::error::{QueryResult, QueryState, transient_error};
 
 /// Command group for persistence operations.
 pub fn group() -> Group {
-    Group::new().command("save", save::<Context>)
+    Group::new().command("save", save)
 }
 
 /// Entry point for all persistence save operations.
-pub fn save<T: ContextProvider + Send + Sync + 'static>(
-    ctx: T,
+pub fn save(
+    ctx: Context,
     serialized_object: PersistedObject,
     campaign_id: CampaignId,
     session_id: SessionId,
@@ -73,8 +73,8 @@ pub fn save<T: ContextProvider + Send + Sync + 'static>(
 /// - `object` - Base object data (position, world, etc.)
 /// - `unit` - Unit-specific data (loadout, medical state)
 /// - `player` - Player-specific data (steam_id, rank)
-fn save_player<T: ContextProvider + Send + Sync + 'static>(
-    ctx: T,
+fn save_player(
+    ctx: Context,
     campaign_id: CampaignId,
     session_id: SessionId,
     object: ObjectData,

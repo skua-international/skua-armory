@@ -10,7 +10,7 @@ This is an Arma 3 extension built using the `arma-rs` crate. It provides:
 - Extension commands callable from SQF (Arma scripting language)
 - Structured logging via `tracing`
 
-> **Important:** Work in `src/extension_new/` for new development. See the `AGENTS.md` file in that directory for detailed architecture documentation.
+> **Important:** Work in `src/extension/` for new development. See the `AGENTS.md` file in that directory for detailed architecture documentation.
 
 ## 2. Project Structure
 
@@ -19,7 +19,7 @@ This is an Arma 3 extension built using the `arma-rs` crate. It provides:
 The extension follows a layered architecture with clear separation of concerns:
 
 ```
-extension/src/extension_new/
+extension/src/extension/
 ├── lib.rs              # Entry point, extension registration
 ├── AGENTS.md           # Detailed LLM instructions
 │
@@ -439,7 +439,7 @@ pub async fn get_client() -> Result<deadpool_postgres::Client, DbError> {
 
 ### 10.2 New Module
 
-1. Create directory under `src/extension_new/`
+1. Create directory under `src/extension/`
 2. Create `mod.rs` with public exports
 3. Add `pub mod module_name;` in `lib.rs`
 4. Register command group in `init()` if applicable

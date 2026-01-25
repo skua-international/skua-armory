@@ -1,4 +1,4 @@
-// src/extension_new/error/query.rs
+// src/extension/error/query.rs
 //
 // Query state and result types for Arma interop.
 // These types represent the outcome of async operations.

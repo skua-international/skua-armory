@@ -1,4 +1,4 @@
-// src/extension_new/error/db.rs
+// src/extension/error/db.rs
 //
 // Database-specific error types.
 

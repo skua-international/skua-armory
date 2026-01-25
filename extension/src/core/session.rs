@@ -1,4 +1,4 @@
-// src/extension_new/core/session.rs
+// src/extension/core/session.rs
 //
 // Session management for the current Arma session.
 // Each extension load creates a new unique session.

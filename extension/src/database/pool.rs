@@ -1,4 +1,4 @@
-// src/extension_new/database/pool.rs
+// src/extension/database/pool.rs
 //
 // Database connection pool management.
 // Uses deadpool-postgres for async connection pooling.
@@ -56,7 +56,9 @@ impl Database {
     }
 
     /// Get a connection from the pool.
-    pub async fn get_conn(&self) -> Result<deadpool_postgres::Client, deadpool_postgres::PoolError> {
+    pub async fn get_conn(
+        &self,
+    ) -> Result<deadpool_postgres::Client, deadpool_postgres::PoolError> {
         self.pool.get().await
     }
 

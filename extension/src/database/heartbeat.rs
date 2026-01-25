@@ -1,4 +1,4 @@
-// src/extension_new/database/heartbeat.rs
+// src/extension/database/heartbeat.rs
 //
 // Background heartbeat task for keeping the session alive.
 

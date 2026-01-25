@@ -1,4 +1,4 @@
-// src/extension_new/logging/commands.rs
+// src/extension/logging/commands.rs
 //
 // Arma-callable commands for log level management.
 

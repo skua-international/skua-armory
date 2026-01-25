@@ -1,4 +1,4 @@
-// src/extension_new/core/runtime.rs
+// src/extension/core/runtime.rs
 //
 // Global Tokio runtime for async operations.
 // All async work should be spawned onto this runtime.

@@ -14,7 +14,7 @@ Skua is an Arma 3 extension providing database persistence for missions. It's bu
 ## Architecture
 
 ```
-src/extension_new/
+src/extension/
 ├── lib.rs              # Entry point, extension registration
 ├── core/               # Core infrastructure
 │   ├── mod.rs
@@ -146,7 +146,7 @@ Register in `lib.rs`:
 
 ### 2. New Module
 
-1. Create directory under `src/extension_new/`
+1. Create directory under `src/extension/`
 2. Create `mod.rs` with public exports
 3. Add `pub mod module_name;` in `lib.rs`
 4. If it has commands, register the group in `init()`

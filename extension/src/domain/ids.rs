@@ -1,4 +1,4 @@
-// src/extension_new/domain/ids.rs
+// src/extension/domain/ids.rs
 //
 // Identifier types for domain entities.
 

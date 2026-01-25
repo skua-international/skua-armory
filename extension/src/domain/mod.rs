@@ -1,4 +1,4 @@
-// src/extension_new/domain/mod.rs
+// src/extension/domain/mod.rs
 //
 // Domain types representing game concepts.
 // These are the core identifiers and value objects used throughout the extension.

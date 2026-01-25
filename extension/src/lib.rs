@@ -1,4 +1,4 @@
-// src/extension_new/lib.rs
+// src/extension/lib.rs
 //
 // Arma 3 Skua extension entry point.
 //
@@ -6,6 +6,7 @@
 // including player data, vehicles, and world state.
 
 use arma_rs::{Extension, arma};
+use std::collections::HashMap;
 use uuid::Uuid;
 
 // Core infrastructure
@@ -45,11 +46,13 @@ fn init() -> Extension {
 }
 
 /// Get diagnostics information about the extension runtime.
-fn diagnostics() -> String {
+fn diagnostics() -> HashMap<&'static str, String> {
     use std::collections::HashMap;
 
     let mut output: HashMap<&str, String> = HashMap::new();
     output.insert("runtime", format!("Tokio Runtime: {:?}", RUNTIME.handle()));
     output.insert("session_id", SESSION_ID.to_string());
-    format!("{:#?}", output)
+    output.insert("database_state", format!("{:?}", database::get_state()));
+
+    output
 }

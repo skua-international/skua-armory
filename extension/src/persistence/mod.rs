@@ -1,4 +1,4 @@
-// src/extension_new/persistence/mod.rs
+// src/extension/persistence/mod.rs
 //
 // Persistence layer for game state.
 // Handles saving and loading of players, vehicles, containers, and world objects.

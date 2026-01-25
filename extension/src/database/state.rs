@@ -1,9 +1,12 @@
-// src/extension_new/database/state.rs
+// src/extension/database/state.rs
 //
 // Database connection state tracking.
 
 use arma_rs::{FromArma, IntoArma};
-use std::sync::atomic::{AtomicU8, Ordering};
+use std::{
+    fmt::Display,
+    sync::atomic::{AtomicU8, Ordering},
+};
 
 /// Current state of the database connection.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -22,6 +25,18 @@ pub enum DatabaseState {
 impl IntoArma for DatabaseState {
     fn to_arma(&self) -> arma_rs::Value {
         arma_rs::Value::Number((*self as u8).into())
+    }
+}
+
+impl Display for DatabaseState {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let s = match self {
+            DatabaseState::AwaitConnect => "AwaitConnect",
+            DatabaseState::ConnectedInit => "ConnectedInit",
+            DatabaseState::ConnectedAwaitInit => "ConnectedAwaitInit",
+            DatabaseState::Failed => "Failed",
+        };
+        write!(f, "{}", s)
     }
 }
 

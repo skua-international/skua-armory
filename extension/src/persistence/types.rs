@@ -1,4 +1,4 @@
-// src/extension_new/persistence/types.rs
+// src/extension/persistence/types.rs
 //
 // Types for persisted game objects.
 

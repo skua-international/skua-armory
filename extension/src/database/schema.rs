@@ -1,8 +1,9 @@
-// src/extension_new/database/schema.rs
+// src/extension/database/schema.rs
 //
 // Database schema bootstrap operations.
 // Handles creation of master, campaign, and session schemas.
 
+use arma_rs::Context;
 use tokio_postgres::Client;
 use tracing::{info, instrument};
 use uuid::Uuid;
@@ -11,7 +12,7 @@ use super::heartbeat;
 use super::pool::{get_client, get_db};
 use super::sql::{campaign, master, session};
 use super::state::DatabaseState;
-use crate::core::{ContextProvider, RUNTIME, SESSION_ID};
+use crate::core::{RUNTIME, SESSION_ID};
 use crate::error::{QueryResult, QueryState, transient_error};
 
 use regex::Regex;
@@ -36,7 +37,7 @@ fn uuid_to_schema_key(uuid: &Uuid) -> String {
 
 /// Bootstraps the master schema and global tables.
 #[instrument(level = "debug", name = "bootstrap_master")]
-pub async fn bootstrap_master(client: &Client) -> Result<(), QueryResult> {
+async fn bootstrap_master(client: &Client) -> Result<(), QueryResult> {
     // Layer 0: Create master schema
     if let Err(e) = client.execute(master::SCHEMA, &[]).await {
         return Err(transient_error("Failed to create master schema", e));
@@ -115,7 +116,7 @@ pub async fn bootstrap_master(client: &Client) -> Result<(), QueryResult> {
 
 /// Bootstraps a campaign schema.
 #[instrument(level = "debug", name = "bootstrap_campaign", skip(client))]
-pub async fn bootstrap_campaign(client: &Client, campaign_id: &str) -> Result<(), QueryResult> {
+async fn bootstrap_campaign(client: &Client, campaign_id: &str) -> Result<(), QueryResult> {
     let schema_key = campaign_id.replace('-', "_");
 
     // Layer 0: Schema
@@ -167,7 +168,7 @@ pub async fn bootstrap_campaign(client: &Client, campaign_id: &str) -> Result<()
 
 /// Bootstraps a session schema.
 #[instrument(level = "debug", name = "bootstrap_session", skip(client))]
-pub async fn bootstrap_session(client: &Client, session_id: &Uuid) -> Result<(), QueryResult> {
+async fn bootstrap_session(client: &Client, session_id: &Uuid) -> Result<(), QueryResult> {
     let schema_key = uuid_to_schema_key(session_id);
 
     // Layer 0: Schema
@@ -206,7 +207,7 @@ pub async fn bootstrap_session(client: &Client, session_id: &Uuid) -> Result<(),
 
 /// Full database bootstrap: master + optional campaign + session.
 #[instrument(level = "debug", skip_all, fields(session_id = %session_id, campaign_id = ?campaign_id, world = %world))]
-pub async fn do_bootstrap(
+async fn do_bootstrap(
     session_id: &Uuid,
     campaign_id: Option<String>,
     world: String,
@@ -272,11 +273,7 @@ pub async fn do_bootstrap(
 }
 
 /// Entry point for bootstrap (Arma command).
-pub fn bootstrap<T: ContextProvider + Send + Sync + 'static>(
-    ctx: T,
-    campaign_id: String,
-    terrain: String,
-) -> QueryState {
+pub fn bootstrap(ctx: Context, campaign_id: String, terrain: String) -> QueryState {
     let session_id = *SESSION_ID;
     let campaign = if campaign_id.is_empty() {
         None
@@ -296,7 +293,7 @@ pub fn bootstrap<T: ContextProvider + Send + Sync + 'static>(
 }
 
 /// End session command.
-pub fn end_session<T: ContextProvider + Send + Sync + 'static>(ctx: T) -> QueryState {
+pub fn end_session(ctx: Context) -> QueryState {
     let session_uuid = *SESSION_ID;
 
     // Stop the heartbeat task

@@ -1,4 +1,4 @@
-// src/extension_new/logging/mod.rs
+// src/extension/logging/mod.rs
 //
 // Structured logging infrastructure.
 // Provides a tracing layer that forwards logs to Arma via callbacks.

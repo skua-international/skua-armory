@@ -1,4 +1,4 @@
-// src/extension_new/logging/layer.rs
+// src/extension/logging/layer.rs
 //
 // Tracing layer that sends log events to Arma via extension callbacks.
 

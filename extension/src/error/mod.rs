@@ -1,4 +1,4 @@
-// src/extension_new/error/mod.rs
+// src/extension/error/mod.rs
 //
 // Centralized error handling for the extension.
 // Provides unified error types and utilities for converting errors

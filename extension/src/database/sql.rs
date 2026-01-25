@@ -1,4 +1,4 @@
-// src/extension_new/database/sql.rs
+// src/extension/database/sql.rs
 //
 // SQL schema definitions embedded at compile time.
 // Files are organized by schema type and numbered for dependency ordering.
