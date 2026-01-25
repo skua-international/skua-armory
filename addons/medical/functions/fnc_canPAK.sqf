@@ -22,6 +22,6 @@ private _stable = _patient call ACEFUNC(medical_status,isInStableCondition);
 
 if (!_stable) exitWith { false };
 
-private _fractures = GET_FRACTURES(_patient);
+private _fractures = GET_FRACTURES(_patient) select {_x > 0}; // non-splinted fractures
 
 _fractures isEqualTo [] // return
