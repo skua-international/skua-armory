@@ -19,7 +19,7 @@
  */
 params ["_name", "_function", "_data"];
 
-if !("skua" in _name || _name == "skua_ext_log") exitWith {}; // We don't care.
+if !(_name regexMatch "^skua:.*/") exitWith {}; // We don't care.
 
 private _actualFunction = format ["%1:%2", (_name splitString ":" select 1), _function];
 INFO_1("Handling extension function: %1",_actualFunction);

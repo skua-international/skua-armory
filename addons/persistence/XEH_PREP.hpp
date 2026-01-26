@@ -2,7 +2,6 @@ PREP(bootstrap);
 PREP(handleBootstrap);
 PREP(handleExtensionCallback);
 PREP(handleLoadPlayerData);
-PREP(heartbeat);
 PREP(loadSettings);
 PREP(loadPlayerData);
 PREP(request_loadPlayerData);

@@ -8,6 +8,8 @@ PREP_RECOMPILE_END;
 
 #include "initSettings.inc.sqf"
 
+if (!isMultiplayer) exitWith {};
+
 if (hasInterface) then {
     [QGVAR(ready), {
         player call FUNC(request_loadPlayerData);
@@ -18,14 +20,11 @@ if (!isServer) exitWith {};
 
 // Pre-Init only runs on the server
 
-// sessionId is used to identify this particular mission session.
-// the sessionId may be used to restore position/medical state upon player reconnect without a mission restart
-GVAR(sessionId) = call EFUNC(common,createUUIDv7);
 GVAR(ready) = false;
 GVAR(runAfterSettingsLoaded) = [];
 GVAR(settingsLoaded) = false;
+GVAR(namespace) = false call CBA_fnc_createNamespace;
 
-INFO_1("Generated mission session ID: %1",GVAR(sessionId));
 addMissionEventHandler ["ExtensionCallback", LINKFUNC(handleExtensionCallback)];
 INFO("Added ExtensionCallback event handler for database extension.");
 
@@ -43,11 +42,6 @@ GVAR(runAfterReady) = [];
     GVAR(runAfterReady) = [];
 }] call CBA_fnc_globalEventJIP;
 
-call FUNC(bootstrap);
-call FUNC(heartbeat);
-
-[QGVAR(saveObject), LINKFUNC(saveObject)] call CBA_fnc_addEventHandler;
-[QGVAR(saveUnit), LINKFUNC(saveUnit)] call CBA_fnc_addEventHandler;
-
+//call FUNC(bootstrap);
 
 ADDON = true;
