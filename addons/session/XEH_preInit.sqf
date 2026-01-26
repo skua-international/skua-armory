@@ -16,7 +16,6 @@ if (isServer) then {
         params ["_unit", "", "_uid", "_name"];
 
         [_unit, _uid] call FUNC(savePlayer);
-        INFO_2("Saved session data for disconnected player %1 with UID %2",_name,_uid);
     }];
 };
 
