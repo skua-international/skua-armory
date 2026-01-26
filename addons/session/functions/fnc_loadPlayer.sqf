@@ -39,6 +39,9 @@ if (!isTouchingGround _player) then { // prevent spawning in mid-air
     _player setPosATL _pos;
 };
 
+private _dir = _playerHolder get "dir";
+_player setDir _dir;
+
 private _medical = _playerHolder get "medical";
 [_player, _medical] call ACEFUNC(medical,deserializeState);
 

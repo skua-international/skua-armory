@@ -35,6 +35,7 @@ _playerHolder set ["loadout", _player call CBA_fnc_getLoadout];
 _playerHolder set ["position", str (getPosATL _player)];
 _playerHolder set ["medical", _player call ACEFUNC(medical,serializeState)];
 _playerHolder set ["stance", stance _player];
+_playerHolder set ["dir", getDir _player];
 
 // Hook for database persistence
 [QGVAR(savedPlayer), [_player, _playerHolder]] call CBA_fnc_serverEvent;
