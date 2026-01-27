@@ -30,20 +30,17 @@ private _deadline = _playerHolder get "deadline";
 if (diag_tickTime > _deadline) exitWith {};
 
 // Medical and position only if still valid
-private _pos = _playerHolder get "position";
-_player setPosASL [parseNumber (_pos select 0), parseNumber (_pos select 1), parseNumber (_pos select 2)];
 
+// Direction before position, https://community.bistudio.com/wiki/setDir#Notes
 private _dir = _playerHolder get "dir";
 _player setDir (parseNumber _dir);
 
+private _pos = _playerHolder get "position";
+_player setPosASL [parseNumber (_pos select 0), parseNumber (_pos select 1), parseNumber (_pos select 2)];
+
 private _medical = _playerHolder get "medical";
-[{
-    params ["_player"];
-    _player getVariable [QACEGVAR(medical,initialized), false];
-}, {
-    params ["_player", "_medical"];
-    [_player, _medical] call ACEFUNC(medical,deserializeState);
-}, [_player, _medical]] call CBA_fnc_waitUntilAndExecute;
+// Unit needs to be local for medical deserialization
+[QGVAR(deserializeMedical), [_player, _medical], _player] call CBA_fnc_targetEvent;
 
 private _stance = _playerHolder get "stance";
 switch (_stance) do {

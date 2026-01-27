@@ -8,6 +8,13 @@ PREP_RECOMPILE_END;
 
 if (!isMultiplayer) exitWith {};
 
+if (hasInterface) then {
+    [QGVAR(deserializeMedical), {
+        _this call ACEFUNC(medical,deserializeState);
+    }] call CBA_fnc_addEventHandler;
+};
+
+
 if (isServer) then {
     GVAR(namespace) = createHashMap;
     [QGVAR(loadPlayer), LINKFUNC(loadPlayer)] call CBA_fnc_addEventHandler;
