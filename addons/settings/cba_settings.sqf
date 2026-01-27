@@ -324,7 +324,7 @@ ace_repair_wheelChangeTime = 10;
 ace_repair_wheelRepairRequiredItems = [];
 
 // ACE Respawn
-ace_respawn_removeDeadBodiesDisconnected = false;
+ace_respawn_removeDeadBodiesDisconnected = true;
 ace_respawn_savePreDeathGear = true; // TODO: remove with shop
 
 // ACE Scopes
