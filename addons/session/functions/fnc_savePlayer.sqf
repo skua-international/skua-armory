@@ -33,7 +33,7 @@ _position = _position apply {_x toFixed 8};
 
 _playerHolder set ["deadline", _deadline];
 _playerHolder set ["loadout", _player call CBA_fnc_getLoadout];
-_playerHolder set ["position", str _position];
+_playerHolder set ["position", _position];
 _playerHolder set ["medical", _player call ACEFUNC(medical,serializeState)];
 _playerHolder set ["stance", stance _player];
 _playerHolder set ["dir", (getDir _player) toFixed 8];
