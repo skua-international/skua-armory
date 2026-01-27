@@ -18,8 +18,6 @@
 params ["_player"];
 TRACE_1("fnc_loadPlayer",_this);
 
-toFixed 8;
-
 private _uid = getPlayerUID _player;
 
 private _playerHolder = GVAR(namespace) get _uid;
@@ -32,18 +30,20 @@ private _deadline = _playerHolder get "deadline";
 if (diag_tickTime > _deadline) exitWith {};
 
 // Medical and position only if still valid
-private _pos = parseSimpleArray (_playerHolder get "position");
-_player setPosATL _pos;
-if (!isTouchingGround _player) then { // prevent spawning in mid-air
-    _pos set [2, 0];
-    _player setPosATL _pos;
-};
+private _pos = _playerHolder get "position";
+_player setPosASL [parseNumber (_pos select 0), parseNumber (_pos select 1), parseNumber (_pos select 2)];
 
 private _dir = _playerHolder get "dir";
-_player setDir _dir;
+_player setDir (parseNumber _dir);
 
 private _medical = _playerHolder get "medical";
-[_player, _medical] call ACEFUNC(medical,deserializeState);
+[{
+    params ["_player"];
+    _player getVariable [QACEGVAR(medical,initialized), false];
+}, {
+    params ["_player", "_medical"];
+    [_player, _medical] call ACEFUNC(medical,deserializeState);
+}, [_player, _medical]] call CBA_fnc_waitUntilAndExecute;
 
 private _stance = _playerHolder get "stance";
 switch (_stance) do {

@@ -20,8 +20,6 @@
 params ["_player", ["_uid", ""]];
 TRACE_1("fnc_savePlayer",_this);
 
-toFixed 8;
-
 if (_uid == "") then {
     _uid = getPlayerUID _player;
 };
@@ -30,12 +28,15 @@ private _deadline = diag_tickTime + EXPIRATION_TIME;
 
 private _playerHolder = GVAR(namespace) getOrDefault [_uid, createHashMap, true];
 
+private _position = getPosASL _player;
+_position = _position apply {_x toFixed 8};
+
 _playerHolder set ["deadline", _deadline];
 _playerHolder set ["loadout", _player call CBA_fnc_getLoadout];
-_playerHolder set ["position", str (getPosATL _player)];
+_playerHolder set ["position", str _position];
 _playerHolder set ["medical", _player call ACEFUNC(medical,serializeState)];
 _playerHolder set ["stance", stance _player];
-_playerHolder set ["dir", getDir _player];
+_playerHolder set ["dir", (getDir _player) toFixed 8];
 
 // Hook for database persistence
 [QGVAR(savedPlayer), [_player, _playerHolder]] call CBA_fnc_serverEvent;
