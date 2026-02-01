@@ -520,31 +520,61 @@ zen_building_markers_enabled = true;
 zhc_offload_Verbosity = 1;
 zhc_stat_MapFpsPos = 1;
 
-
-// Improved Melee System (Client Settings)
-IMS_CustomCamer_Y = 3;
-IMS_CustomCameraUsedByUserAllowed = true;
-IMS_EnablePlayerSounds = true;
-IMS_HudCoordinate_X = 0.01;
-IMS_HudCoordinate_Y = 0.9;
-IMS_ShowHealthHud = true;
-
 // Improved Melee System (Server Settings)
 force IMS_AddKnifeToUnit = false;
 force IMS_BayonetDistance = "6";
 force IMS_BayonetOnAI = false;
-force IMS_BluntWeapon = false;
+force IMS_BluntWeapon = true;
 force IMS_CustomAIHEALTH = "2";
 force IMS_DamageMultiplierParam = "1";
 force IMS_DamageMultiplierParamPlayer = "1";
-force IMS_ExecutionChanceParametr = "20";
-force IMS_isFistsAllowd = true;
+force IMS_ExecutionChanceParametr = "0";
+force IMS_isFistsAllowd = false;
 force IMS_isHumansCanHitSM = false;
-force IMS_isImsCanHitAllies = true;
+force IMS_isImsCanHitAllies = false;
 force IMS_isKickButtInstaKill = true;
 force IMS_isStaticDeaths = true;
-force IMS_RifleDodgeSet = true;
+force IMS_RifleDodgeSet = false;
 force IMS_StealthAI_Ears = 15;
 force IMS_StealthAI_Eyes = 40;
-force IMS_WBK_CUSTOMCAMSERVER = false;
+force IMS_WBK_CUSTOMCAMSERVER = true;
 force IMS_WBK_MAINFPTP = true;
+
+// WebKnight's Zombies
+force WBK_Zommbies_Halth_Runner = "50";
+force WBK_Zommbies_Halth_Shamb = "40";
+force WBK_Zommbies_Halth_Trig = "30";
+force WBK_Zommbies_Halth_Walker = "30";
+force WBK_Zommbies_HeadshotMultiplier = "5";
+force WBK_Zommbies_HowFarCanSee = "150";
+force WBK_Zommbies_HowFarCanSee_Goliath = "150";
+force WBK_Zommbies_HowFarCanSee_SI = "150";
+force WBK_Zommbies_HowFarCanSee_Smash = "150";
+force WBK_Zommbies_PathingDebug = false;
+force WBK_Zommbies_PathingPositionChange = "8";
+force WBK_ZommbiesBloaterHealthParam = "80";
+force WBK_ZommbiesCorruptedHealthParam = "200";
+force WBK_ZommbiesCorruptedTakeMusicParam = true;
+force WBK_ZommbiesCorruptedTakeParam = true;
+force WBK_ZommbiesCorruptedTakeTimeParam = "40";
+force WBK_ZommbiesGoliathHealthParam = "15000";
+force WBK_ZommbiesGoliathPickupAttackParam = true;
+force WBK_ZommbiesGoliathThrowParam = true;
+force WBK_ZommbiesGoliathThrowShardsParam = true;
+force WBK_ZommbiesGoliathUndergroundAttackParam = true;
+force WBK_ZommbiesGoliathUndergroundAttackParam_distance = "15";
+force WBK_ZommbiesGoliathUndergroundAttackParam_max = "3";
+force WBK_ZommbiesLeaperHealthParam = "120";
+force WBK_ZommbiesMeleeHealthParam = "60";
+force WBK_ZommbiesScreamerCoolParam = "20";
+force WBK_ZommbiesScreamerDistParam = "100";
+force WBK_ZommbiesScreamerHealthParam = "160";
+force WBK_ZommbiesSmasherHealthParam = "3500";
+force WBK_ZommbiesSmasherHealthParam_Acid = "4000";
+force WBK_ZommbiesSmasherHealthParam_Hell = "5000";
+force WBK_ZommbiesSmasherJumpParam = true;
+force WBK_ZommbiesSmasherThrowParam = true;
+force WBK_ZommbiesSmasherThrowParam_Deb = "45";
+force WBK_ZommbiesSmasherThrowParam_Deb_Fire = "90";
+force WBK_ZommbiesSmasherThrowParam_Deb_Spewer = "45";
+force WBK_ZommbiesSmasherThrowParam_Deb_TP = "90";
