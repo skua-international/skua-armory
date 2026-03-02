@@ -1,0 +1,4 @@
+- Create a new mission in the editor, Save As > MPMissions > Your Mission name.
+- Navigate to your profile folder (typically C:\Users\<username>\Arma 3 - Other Profiles\<profile>)
+- Copy mission.sqm and description.ext into the folder.
+- Quit the editor and reload.
