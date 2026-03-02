@@ -129,8 +129,13 @@ ace_cargo_paradropTimeCoefficent = 1;
 ace_cargo_unloadOnKilled = 0.5;
 ace_rearm_distance = 15;
 ace_rearm_enabled = true;
+// Rearm "speed", 0 - Rearm the entire vehicle, 1 - Rearm a type of magazine, 2 - "Caliber-based rearming", meaning a partial rearm
+// "Caliber" in this case is a points system based on the caliber of the weapon, so a 5.56mm magazine would be worth less than a 7.62mm magazine, and a 40mm grenade would be worth more than both
 ace_rearm_level = 2;
-ace_rearm_supply = 2;
+// 0 - Unlimited, 1 - Limited, set by ace_rearm__supply, 2 - Individual Magazines need to be loaded
+// Set to unlimited for now until we implement buying ammo, then switch to 1, or 2 if we ever get vehicle CSW
+// Vehicle CSW probably ain't happening though
+ace_rearm_supply = 0;
 ace_refuel_cargoRate = 10;
 ace_refuel_enabled = true;
 ace_refuel_hoseLength = 12;
@@ -492,6 +497,29 @@ diwako_dui_radar_syncGroup = true;
 // Enhanced Movement Rework
 emr_main_preventHighVaulting = true;
 
+// Fleff's Advanced Repair
+force ace_advrepair_Avionics = 20;
+force ace_advrepair_ControlSurfaces = 20;
+force ace_advrepair_DefaultRepair = 100;
+force ace_advrepair_EngPistonLarge = 10;
+force ace_advrepair_EngPistonMedium = 30;
+force ace_advrepair_EngPistonSmall = 50;
+force ace_advrepair_EngTurbineLarge = 5;
+force ace_advrepair_EngTurbineSmall = 10;
+force ace_advrepair_ERARep = 50;
+force ace_advrepair_FuelTankLarge = 25;
+force ace_advrepair_FuelTankSmall = 50;
+force ace_advrepair_GunFCSRepair = 20;
+force ace_advrepair_Hull0 = 30;
+force ace_advrepair_Hull1 = 20;
+force ace_advrepair_Hull2 = 10;
+force ace_advrepair_MajorRepairLocations = 0;
+force ace_advrepair_MajorRepairPermissions = 1;
+force ace_advrepair_RotorAssembly = 20;
+force ace_advrepair_TrackRepair = 25;
+force ace_advrepair_TurretDrive = 20;
+force ace_advrepair_WheelRepair = 50;
+
 // GRAD Trenches
 grad_trenches_functions_allowTrenchDecay = true;
 grad_trenches_functions_bigEnvelopeDigTime = 20;
@@ -504,6 +532,9 @@ grad_trenches_functions_shortEnvelopeDigTime = 10;
 grad_trenches_functions_smallEnvelopeDigTime = 8;
 grad_trenches_functions_timeoutToDecay = 60;
 grad_trenches_functions_vehicleEnvelopeDigTime = 60;
+
+// Inventory Dumper
+force force ivn_dumper_mode = 0;
 
 // Immersive Cigs - AI
 force cigs_ai_set_cigsonai_chance = 0.05;
