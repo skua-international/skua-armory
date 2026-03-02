@@ -20,6 +20,19 @@
     };
 }] call CBA_fnc_addEventHandler;
 
+[QACEGVAR(medical_treatment,fullHealLocalMod), {
+    params ["_patient"];
+
+    if (_patient isNotEqualTo ACE_player) exitWith {};
+
+    // Fix deafness
+    ACEGVAR(hearing,deafnessDV) = 0;
+    ACEGVAR(hearing,deafnessPrior) = 0;
+    ACEGVAR(hearing,time3) = 0;
+
+    -1 call ACEFUNC(hearing,updateHearingProtection);
+}] call CBA_fnc_addEventHandler;
+
 private _medicalVehicleAction = [QGVAR(vehicleAction), "Make Medical Vehicle", "\z\ace\addons\medical_gui\ui\cross.paa", {
     _target setVariable [QACEGVAR(medical,isMedicalVehicle), true, true]
 }, {
