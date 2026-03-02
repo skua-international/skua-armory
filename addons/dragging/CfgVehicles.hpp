@@ -1,7 +1,7 @@
 class CfgVehicles {
     class Man;
     class CAManBase: Man {
-        ace_dragging_ignoreWeight = 1;
-        ace_dragging_ignoreWeightCarry = 1;
+        ACEGVAR(dragging,ignoreWeight) = 1;
+        ACEGVAR(dragging,ignoreWeightCarry) = 1;
     };
 };
