@@ -26,7 +26,7 @@ class CfgVehicles {
                 displayName = "$STR_eval_typeside";
                 property = QGVAR(moduleSide);
                 typeName = "NUMBER";
-                defaultValue = 1;
+                defaultValue = 5; // Default to all
                 class values {
                     class West {
                         name = "$STR_WEST";
@@ -54,7 +54,7 @@ class CfgVehicles {
                 displayName = "Reference Object";
                 property = QGVAR(moduleObject);
                 typeName = "STRING";
-                defaultValue = "";
+                defaultValue = "''";
                 tooltip = "Variable name of the reference object.";
             };
             class ModuleDescription: ModuleDescription {};
@@ -86,7 +86,7 @@ class CfgVehicles {
                 displayName = "$STR_eval_typeside";
                 property = QGVAR(moduleSide);
                 typeName = "NUMBER";
-                defaultValue = 1;
+                defaultValue = 5; // Default to all
                 class values {
                     class West {
                         name = "$STR_WEST";

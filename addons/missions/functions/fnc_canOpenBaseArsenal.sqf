@@ -17,8 +17,6 @@
  */
 params ["_unit"];
 
-if (isNil QGVAR(baseArsenal)) exitWith {false};
-
 private _side = side group _unit;
 
 private _areas = GVAR(arsenalAreas) get _side;

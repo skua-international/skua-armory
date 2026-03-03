@@ -17,4 +17,8 @@
  */
 params ["_unit"];
 
-[GVAR(baseArsenal), _unit, false] call ACEFUNC(arsenal,openBox);
+private _unitSide = side group _unit;
+private _arsenal = GVAR(baseArsenals) get _unitSide;
+if (!alive _arsenal) exitWith {systemChat "Base Arsenal not set, deleted, or destroyed."};
+
+[_arsenal, _unit, false] call ACEFUNC(arsenal,openBox);

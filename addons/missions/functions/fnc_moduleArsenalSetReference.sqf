@@ -18,7 +18,7 @@
 params ["_logic"];
 TRACE_1("fnc_moduleArsenalSetReference",_this);
 
-private _objectName = _logic getVariable ["objectReference", ""];
+private _objectName = _logic getVariable ["RefObject", ""];
 if (_objectName isEqualTo "") exitWith {};
 
 private _object = missionNamespace getVariable [_objectName, objNull];
