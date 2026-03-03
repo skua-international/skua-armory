@@ -13,4 +13,11 @@ GVAR(arsenalAreas) = createHashMapFromArray [
     [civilian, []]
 ];
 
+GVAR(baseArsenals) = createHashMapFromArray [
+    [west, objNull],
+    [east, objNull],
+    [resistance, objNull],
+    [civilian, objNull]
+];
+
 ADDON = true;
