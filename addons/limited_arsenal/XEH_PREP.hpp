@@ -1,0 +1,2 @@
+PREP(handleLimitedArsenalOpen);
+PREP(syncArsenal);

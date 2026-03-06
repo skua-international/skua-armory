@@ -1,8 +1,5 @@
 #include "script_component.hpp"
 
-// Camo coef for vanilla standard military uniforms
-#define BASELINE_CAMO_COEF 1.4
-
 call FUNC(notifyClientConnected);
 
 GVAR(camoCoefMap) = createHashMap;
@@ -14,13 +11,25 @@ GVAR(camoCoefMap) = createHashMap;
         _unit setUnitTrait ["camouflageCoef", 1];
     };
 
-    private _camoCoef = GVAR(camoCoefMap) getOrDefaultCall [uniform _unit, {
-        private _uniformCoef = getNumber (configFile >> "CfgVehicles" >> getText (configFile >> "CfgWeapons" >> (uniform _unit) >> "ItemInfo" >> "uniformClass") >> "camouflage");
-
-        private _normalizedCoef = _uniformCoef / BASELINE_CAMO_COEF;
-
-        sqrt(_normalizedCoef) // return
+    private _baseCamo = GVAR(camoCoefMap) getOrDefaultCall [typeOf _unit, {
+        // at least this is easy
+        // a uniform is actually a reference to the textures and model of a CfgVehicles class
+        // but actual camo is based on the unit, not the uniform it's wearing
+        // basically just do configOf and divide and we'll get a coef setting it to what it should be
+         getNumber (configOf _unit >> "camouflage")
     }, true];
+
+    private _uniformCamo = GVAR(camoCoefMap) getOrDefaultCall [_name, {
+        private _uniformClass = getText (configFile >> "CfgWeapons" >> _name >> "ItemInfo" >> "uniformClass");
+        getNumber (configFile >> "CfgVehicles" >> _uniformClass >> "camouflage")
+    }, true];
+
+    if (_baseCamo == 0 || _uniformCamo == 0) exitWith {
+        _unit setUnitTrait ["camouflageCoef", 1];
+    };
+
+    // Calculate the camo coef
+    private _camoCoef = _uniformCamo / _baseCamo;
 
     _unit setUnitTrait ["camouflageCoef", _camoCoef];
 }] call CBA_fnc_addClassEventHandler;
