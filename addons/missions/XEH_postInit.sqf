@@ -12,4 +12,6 @@ if (isServer) then {
 
         [GVAR(baseArsenals) get _x, true, true] call ACEFUNC(arsenal,initBox);
     } forEach GVAR(baseArsenals);
+
+    publicVariable QGVAR(baseArsenals); // make sure to sync
 };
