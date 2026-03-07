@@ -19,7 +19,7 @@ class Display3DEN {
                     data = "";
                     shortcuts[] = {};
                     opensNewWindow = 0;
-                    action = """skua"" callExtension [""descriptionExt"", [getMissionPath """"]]; systemChat ""description.ext created. Open mission folder with File > Open in VSCode to edit.""";
+                    action = """skua"" callExtension [""descriptionExt"", [getMissionPath """"]]; systemChat ""description.ext created. Open mission folder with ALT-O or Open in VSCode to edit.""";
                     enable = 1;
                 };
             };
