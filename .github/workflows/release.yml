@@ -6,23 +6,30 @@ on:
     - 'v*.*.*'
 
 jobs:
-  build_addon:
+  release:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+    - name: Checkout the source code
+      uses: actions/checkout@v1
+
     - name: Set VERSION env
       run: echo VERSION=${GITHUB_REF:11} >> $GITHUB_ENV
-    - name: Build addon with HEMTT
-      uses: 16AAModTeam/hemtt@stable
+
+    - name: Setup HEMTT
+      uses: arma-actions/hemtt@v1
       with:
-        command: 'build --release'
-    # Upload to Steam Workshop
-    - uses: arma-actions/workshop-upload@v1
+        annotate: false
+
+    - name: Run HEMTT release
+      run: hemtt release
+
+    - name: Upload to Workshop
+      uses: arma-actions/workshop-upload@v1
       with:
         appId: '107410'    # default
         itemId: '3680089530' # Id of item to update
-        contentPath: 'releases/${{ env.VERSION }}/@skua'
-        changelog: 'Content of change notes'
+        contentPath: '.hemttout/release'
+        changelog: 'https://github.com/skua-international/skua-armory/releases/tag/v${{ env.VERSION }}' # set to github tag link
       env:
         STEAM_USERNAME: ${{ secrets.STEAM_USERNAME }}
         STEAM_PASSWORD: ${{ secrets.STEAM_PASSWORD }}
