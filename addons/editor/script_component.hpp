@@ -1,5 +1,5 @@
-#define COMPONENT missions
-#define COMPONENT_BEAUTIFIED Missions
+#define COMPONENT editor
+#define COMPONENT_BEAUTIFIED Editor
 #include "\z\skua\addons\main\script_mod.hpp"
 
 // #define DEBUG_MODE_FULL
