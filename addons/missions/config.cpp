@@ -20,3 +20,4 @@ class CfgPatches {
 #include "CfgEventHandlers.hpp"
 #include "CfgModuleCategories.hpp"
 #include "CfgVehicles.hpp"
+#include "skua_logistics_items.hpp"
