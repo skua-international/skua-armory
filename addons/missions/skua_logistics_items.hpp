@@ -11,13 +11,13 @@ class GVAR(logisticsItems) {
         description = "A spare track for tracked vehicles.";
         price = 0; // Placeholder, not gonna be set here
     };
-    class FuelCanister {
+    /* class FuelCanister {
         displayName = "Fuel Canister";
         object = "Land_CanisterFuel_F";
         description = "An empty fuel canister for refueling vehicles.";
         price = 0; // Placeholder, not gonna be set here
         onPull = QFUNC(logistics_onPullFuelCanister);
-    };
+    }; */
     class CargoNet {
         displayName = "Cargo Net";
         object = "APM_largeBox";
@@ -44,17 +44,17 @@ class GVAR(logisticsItems) {
     };
     class SparePartsBox {
         displayName = "Spare Parts Box";
-        object = "";
+        object = "FL_parts_SpareParts";
         description = "A box containing spare parts for vehicle repairs.";
         price = 0; // Placeholder, not gonna be set here
     };
-    class FleffSparePartsParent {
+    /* class FleffSparePartsParent {
         displayName = "Repair Parts";
         object = "";
         description = "sub-menu for Fleffs Advanced Repair Major Parts.";
         price = 0; // Placeholder, not gonna be set here
         children = QFUNC(logistics_getMajorParts);
-    };
+    }; */
     class MedicalBox {
         displayName = "Medical Box";
         object = "ACE_medicalSupplyCrate_advanced";
