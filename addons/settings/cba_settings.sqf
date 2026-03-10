@@ -473,7 +473,7 @@ diwako_dui_indicators_useACENametagsRange = true;
 diwako_dui_linecompass_Enabled = false;
 
 // DUI - Squad Radar - Main
-force diwako_dui_colors = "ace";
+diwako_dui_colors = "ace";
 
 // DUI - Squad Radar - Nametags
 diwako_dui_nametags_deadRenderDistance = 3.5;
@@ -500,27 +500,27 @@ diwako_dui_radar_syncGroup = true;
 emr_main_preventHighVaulting = true;
 
 // Fleff's Advanced Repair
-force ace_advrepair_Avionics = 20;
-force ace_advrepair_ControlSurfaces = 20;
-force ace_advrepair_DefaultRepair = 100;
-force ace_advrepair_EngPistonLarge = 10;
-force ace_advrepair_EngPistonMedium = 30;
-force ace_advrepair_EngPistonSmall = 50;
-force ace_advrepair_EngTurbineLarge = 5;
-force ace_advrepair_EngTurbineSmall = 10;
-force ace_advrepair_ERARep = 50;
-force ace_advrepair_FuelTankLarge = 25;
-force ace_advrepair_FuelTankSmall = 50;
-force ace_advrepair_GunFCSRepair = 20;
-force ace_advrepair_Hull0 = 30;
-force ace_advrepair_Hull1 = 20;
-force ace_advrepair_Hull2 = 10;
-force ace_advrepair_MajorRepairLocations = 0;
-force ace_advrepair_MajorRepairPermissions = 1;
-force ace_advrepair_RotorAssembly = 20;
-force ace_advrepair_TrackRepair = 25;
-force ace_advrepair_TurretDrive = 20;
-force ace_advrepair_WheelRepair = 50;
+ace_advrepair_Avionics = 20;
+ace_advrepair_ControlSurfaces = 20;
+ace_advrepair_DefaultRepair = 100;
+ace_advrepair_EngPistonLarge = 10;
+ace_advrepair_EngPistonMedium = 30;
+ace_advrepair_EngPistonSmall = 50;
+ace_advrepair_EngTurbineLarge = 5;
+ace_advrepair_EngTurbineSmall = 10;
+ace_advrepair_ERARep = 50;
+ace_advrepair_FuelTankLarge = 25;
+ace_advrepair_FuelTankSmall = 50;
+ace_advrepair_GunFCSRepair = 20;
+ace_advrepair_Hull0 = 30;
+ace_advrepair_Hull1 = 20;
+ace_advrepair_Hull2 = 10;
+ace_advrepair_MajorRepairLocations = 0;
+ace_advrepair_MajorRepairPermissions = 1;
+ace_advrepair_RotorAssembly = 20;
+ace_advrepair_TrackRepair = 25;
+ace_advrepair_TurretDrive = 20;
+ace_advrepair_WheelRepair = 50;
 
 // GRAD Trenches
 grad_trenches_functions_allowTrenchDecay = true;
@@ -536,10 +536,10 @@ grad_trenches_functions_timeoutToDecay = 60;
 grad_trenches_functions_vehicleEnvelopeDigTime = 60;
 
 // Inventory Dumper
-force force ivn_dumper_mode = 0;
+ivn_dumper_mode = 0;
 
 // Immersive Cigs - AI
-force cigs_ai_set_cigsonai_chance = 0.05;
+cigs_ai_set_cigsonai_chance = 0.05;
 
 // KJW's Medical Expansion
 KJW_MedicalExpansion_core_bloodIncompatibilityEnabled = true;
@@ -557,60 +557,60 @@ zhc_offload_Verbosity = 1;
 zhc_stat_MapFpsPos = 1;
 
 // Improved Melee System (Server Settings)
-force IMS_AddKnifeToUnit = false;
-force IMS_BayonetDistance = "6";
-force IMS_BayonetOnAI = false;
-force IMS_BluntWeapon = true;
-force IMS_CustomAIHEALTH = "2";
-force IMS_DamageMultiplierParam = "1";
-force IMS_DamageMultiplierParamPlayer = "1";
-force IMS_ExecutionChanceParametr = "0";
-force IMS_isFistsAllowd = false;
-force IMS_isHumansCanHitSM = false;
-force IMS_isImsCanHitAllies = false;
-force IMS_isKickButtInstaKill = true;
-force IMS_isStaticDeaths = true;
-force IMS_RifleDodgeSet = false;
-force IMS_StealthAI_Ears = 15;
-force IMS_StealthAI_Eyes = 40;
-force IMS_WBK_CUSTOMCAMSERVER = true;
-force IMS_WBK_MAINFPTP = true;
+IMS_AddKnifeToUnit = false;
+IMS_BayonetDistance = "6";
+IMS_BayonetOnAI = false;
+IMS_BluntWeapon = true;
+IMS_CustomAIHEALTH = "2";
+IMS_DamageMultiplierParam = "1";
+IMS_DamageMultiplierParamPlayer = "1";
+IMS_ExecutionChanceParametr = "0";
+IMS_isFistsAllowd = false;
+IMS_isHumansCanHitSM = false;
+IMS_isImsCanHitAllies = false;
+IMS_isKickButtInstaKill = true;
+IMS_isStaticDeaths = true;
+IMS_RifleDodgeSet = false;
+IMS_StealthAI_Ears = 15;
+IMS_StealthAI_Eyes = 40;
+IMS_WBK_CUSTOMCAMSERVER = true;
+IMS_WBK_MAINFPTP = true;
 
 // WebKnight's Zombies
-force WBK_Zommbies_Halth_Runner = "50";
-force WBK_Zommbies_Halth_Shamb = "40";
-force WBK_Zommbies_Halth_Trig = "30";
-force WBK_Zommbies_Halth_Walker = "30";
-force WBK_Zommbies_HeadshotMultiplier = "5";
-force WBK_Zommbies_HowFarCanSee = "150";
-force WBK_Zommbies_HowFarCanSee_Goliath = "150";
-force WBK_Zommbies_HowFarCanSee_SI = "150";
-force WBK_Zommbies_HowFarCanSee_Smash = "150";
-force WBK_Zommbies_PathingDebug = false;
-force WBK_Zommbies_PathingPositionChange = "8";
-force WBK_ZommbiesBloaterHealthParam = "80";
-force WBK_ZommbiesCorruptedHealthParam = "200";
-force WBK_ZommbiesCorruptedTakeMusicParam = true;
-force WBK_ZommbiesCorruptedTakeParam = true;
-force WBK_ZommbiesCorruptedTakeTimeParam = "40";
-force WBK_ZommbiesGoliathHealthParam = "15000";
-force WBK_ZommbiesGoliathPickupAttackParam = true;
-force WBK_ZommbiesGoliathThrowParam = true;
-force WBK_ZommbiesGoliathThrowShardsParam = true;
-force WBK_ZommbiesGoliathUndergroundAttackParam = true;
-force WBK_ZommbiesGoliathUndergroundAttackParam_distance = "15";
-force WBK_ZommbiesGoliathUndergroundAttackParam_max = "3";
-force WBK_ZommbiesLeaperHealthParam = "120";
-force WBK_ZommbiesMeleeHealthParam = "60";
-force WBK_ZommbiesScreamerCoolParam = "20";
-force WBK_ZommbiesScreamerDistParam = "100";
-force WBK_ZommbiesScreamerHealthParam = "160";
-force WBK_ZommbiesSmasherHealthParam = "3500";
-force WBK_ZommbiesSmasherHealthParam_Acid = "4000";
-force WBK_ZommbiesSmasherHealthParam_Hell = "5000";
-force WBK_ZommbiesSmasherJumpParam = true;
-force WBK_ZommbiesSmasherThrowParam = true;
-force WBK_ZommbiesSmasherThrowParam_Deb = "45";
-force WBK_ZommbiesSmasherThrowParam_Deb_Fire = "90";
-force WBK_ZommbiesSmasherThrowParam_Deb_Spewer = "45";
-force WBK_ZommbiesSmasherThrowParam_Deb_TP = "90";
+WBK_Zommbies_Halth_Runner = "50";
+WBK_Zommbies_Halth_Shamb = "40";
+WBK_Zommbies_Halth_Trig = "30";
+WBK_Zommbies_Halth_Walker = "30";
+WBK_Zommbies_HeadshotMultiplier = "5";
+WBK_Zommbies_HowFarCanSee = "150";
+WBK_Zommbies_HowFarCanSee_Goliath = "150";
+WBK_Zommbies_HowFarCanSee_SI = "150";
+WBK_Zommbies_HowFarCanSee_Smash = "150";
+WBK_Zommbies_PathingDebug = false;
+WBK_Zommbies_PathingPositionChange = "8";
+WBK_ZommbiesBloaterHealthParam = "80";
+WBK_ZommbiesCorruptedHealthParam = "200";
+WBK_ZommbiesCorruptedTakeMusicParam = true;
+WBK_ZommbiesCorruptedTakeParam = true;
+WBK_ZommbiesCorruptedTakeTimeParam = "40";
+WBK_ZommbiesGoliathHealthParam = "15000";
+WBK_ZommbiesGoliathPickupAttackParam = true;
+WBK_ZommbiesGoliathThrowParam = true;
+WBK_ZommbiesGoliathThrowShardsParam = true;
+WBK_ZommbiesGoliathUndergroundAttackParam = true;
+WBK_ZommbiesGoliathUndergroundAttackParam_distance = "15";
+WBK_ZommbiesGoliathUndergroundAttackParam_max = "3";
+WBK_ZommbiesLeaperHealthParam = "120";
+WBK_ZommbiesMeleeHealthParam = "60";
+WBK_ZommbiesScreamerCoolParam = "20";
+WBK_ZommbiesScreamerDistParam = "100";
+WBK_ZommbiesScreamerHealthParam = "160";
+WBK_ZommbiesSmasherHealthParam = "3500";
+WBK_ZommbiesSmasherHealthParam_Acid = "4000";
+WBK_ZommbiesSmasherHealthParam_Hell = "5000";
+WBK_ZommbiesSmasherJumpParam = true;
+WBK_ZommbiesSmasherThrowParam = true;
+WBK_ZommbiesSmasherThrowParam_Deb = "45";
+WBK_ZommbiesSmasherThrowParam_Deb_Fire = "90";
+WBK_ZommbiesSmasherThrowParam_Deb_Spewer = "45";
+WBK_ZommbiesSmasherThrowParam_Deb_TP = "90";
