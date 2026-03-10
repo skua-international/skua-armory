@@ -102,9 +102,8 @@ mod integration_tests {
         let ctx = extension.context();
 
         let no_campaign_id: String = "".to_string();
-        let test_terrain: String = "integration_test_world".to_string();
 
-        let state = bootstrap(ctx, no_campaign_id, test_terrain);
+        let state = bootstrap(ctx, no_campaign_id);
         assert_eq!(
             state,
             QueryState::Processing,

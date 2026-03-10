@@ -19,16 +19,6 @@ pub mod master {
         include_str!("sql/031_master_player_certs_idx_steam.sql");
     pub const PLAYER_CERTS_IDX_CERT: &str =
         include_str!("sql/032_master_player_certs_idx_cert.sql");
-    pub const SESSIONS: &str = include_str!("sql/040_master_sessions.sql");
-    pub const SESSIONS_IDX_ACTIVE: &str = include_str!("sql/041_master_sessions_idx_active.sql");
-    pub const SESSIONS_IDX_CAMPAIGN: &str =
-        include_str!("sql/042_master_sessions_idx_campaign.sql");
-    pub const FN_UPDATE_HEARTBEAT: &str = include_str!("sql/050_function_update_heartbeat.sql");
-    pub const TRIGGER_UPDATE_HEARTBEAT: &str = include_str!("sql/051_trigger_update_heartbeat.sql");
-    pub const FN_PROMOTE_EPHEMERAL: &str = include_str!("sql/052_function_promote_ephemeral.sql");
-    pub const FN_CLEANUP_EXPIRED: &str =
-        include_str!("sql/053_function_cleanup_expired_sessions.sql");
-    pub const FN_EXPIRE_STALE: &str = include_str!("sql/054_function_expire_stale_sessions.sql");
 }
 
 // Campaign schema templates (100-199)
@@ -40,13 +30,4 @@ pub mod campaign {
         include_str!("sql/121_campaign_player_world_data_idx.sql");
     pub const WORLD_DATA: &str = include_str!("sql/130_campaign_world_data.sql");
     pub const WORLD_DATA_IDX: &str = include_str!("sql/131_campaign_world_data_idx.sql");
-}
-
-// Session schema templates (200-299)
-pub mod session {
-    pub const SCHEMA: &str = include_str!("sql/200_session_schema.sql");
-    pub const PLAYER_DATA: &str = include_str!("sql/210_session_player_data.sql");
-    pub const PLAYER_DATA_IDX: &str = include_str!("sql/211_session_player_data_idx.sql");
-    pub const FN_PROMOTE: &str = include_str!("sql/220_session_function_promote.sql");
-    pub const TRIGGER_PROMOTE: &str = include_str!("sql/221_session_trigger_promote.sql");
 }

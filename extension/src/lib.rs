@@ -11,7 +11,7 @@ use uuid::Uuid;
 
 // Core infrastructure
 pub mod core;
-pub use core::{RUNTIME, SESSION_ID};
+pub use core::RUNTIME;
 
 // Error handling
 pub mod error;
@@ -19,9 +19,10 @@ pub use error::{DbError, QueryError, QueryResult, QueryState};
 
 // Domain types
 pub mod domain;
-pub use domain::{CampaignId, PlayerId, SessionId};
+pub use domain::{CampaignId, PlayerId};
 
 // Feature modules
+pub mod certification;
 pub mod database;
 pub mod logging;
 pub mod persistence;
@@ -51,7 +52,6 @@ fn diagnostics() -> HashMap<&'static str, String> {
 
     let mut output: HashMap<&str, String> = HashMap::new();
     output.insert("runtime", format!("Tokio Runtime: {:?}", RUNTIME.handle()));
-    output.insert("session_id", SESSION_ID.to_string());
     output.insert("database_state", format!("{:?}", database::get_state()));
 
     output

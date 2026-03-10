@@ -8,7 +8,6 @@
 // - Arma-callable commands (`commands`)
 
 mod commands;
-mod heartbeat;
 mod pool;
 mod schema;
 mod sql;

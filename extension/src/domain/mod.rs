@@ -5,4 +5,4 @@
 
 mod ids;
 
-pub use ids::{CampaignId, PlayerId, SessionId};
+pub use ids::{CampaignId, PlayerId};

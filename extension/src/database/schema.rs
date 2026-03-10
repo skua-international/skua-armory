@@ -1,18 +1,16 @@
 // src/extension/database/schema.rs
 //
 // Database schema bootstrap operations.
-// Handles creation of master, campaign, and session schemas.
+// Handles creation of master and campaign schemas.
 
 use arma_rs::Context;
 use tokio_postgres::Client;
 use tracing::{info, instrument};
-use uuid::Uuid;
 
-use super::heartbeat;
-use super::pool::{get_client, get_db};
-use super::sql::{campaign, master, session};
+use super::pool::get_db;
+use super::sql::{campaign, master};
 use super::state::DatabaseState;
-use crate::core::{RUNTIME, SESSION_ID};
+use crate::core::RUNTIME;
 use crate::error::{QueryResult, QueryState, transient_error};
 
 use regex::Regex;
@@ -28,11 +26,6 @@ pub fn sanitize_key(key: &str) -> Result<String, &'static str> {
     }
 
     Ok(key)
-}
-
-/// Converts a UUID to schema key format (hyphens to underscores).
-fn uuid_to_schema_key(uuid: &Uuid) -> String {
-    uuid.to_string().replace('-', "_")
 }
 
 /// Bootstraps the master schema and global tables.
@@ -72,42 +65,18 @@ async fn bootstrap_master(client: &Client) -> Result<(), QueryResult> {
     }
 
     // Layer 3: Tables depending on player_info
-    for (sql, desc) in [
-        (master::PLAYER_CERTS, "player_certs table"),
-        (master::SESSIONS, "sessions table"),
-    ] {
-        if let Err(e) = client.execute(sql, &[]).await {
-            return Err(transient_error(&format!("Failed to create {}", desc), e));
-        }
+    if let Err(e) = client.execute(master::PLAYER_CERTS, &[]).await {
+        return Err(transient_error("Failed to create player_certs table", e));
     }
 
-    // Layer 3b: Indexes for layer 3 tables
+    // Layer 3b: Indexes for player_certs
     for (sql, desc) in [
         (master::PLAYER_CERTS_IDX_STEAM, "player_certs steam index"),
         (master::PLAYER_CERTS_IDX_CERT, "player_certs cert index"),
-        (master::SESSIONS_IDX_ACTIVE, "sessions active index"),
-        (master::SESSIONS_IDX_CAMPAIGN, "sessions campaign index"),
     ] {
         if let Err(e) = client.execute(sql, &[]).await {
             return Err(transient_error(&format!("Failed to create {}", desc), e));
         }
-    }
-
-    // Layer 4: Functions
-    for (sql, desc) in [
-        (master::FN_UPDATE_HEARTBEAT, "update_heartbeat function"),
-        (master::FN_PROMOTE_EPHEMERAL, "promote_ephemeral function"),
-        (master::FN_CLEANUP_EXPIRED, "cleanup_expired function"),
-        (master::FN_EXPIRE_STALE, "expire_stale function"),
-    ] {
-        if let Err(e) = client.execute(sql, &[]).await {
-            return Err(transient_error(&format!("Failed to create {}", desc), e));
-        }
-    }
-
-    // Layer 5: Triggers
-    if let Err(e) = client.execute(master::TRIGGER_UPDATE_HEARTBEAT, &[]).await {
-        return Err(transient_error("Failed to create heartbeat trigger", e));
     }
 
     info!("master schema bootstrapped");
@@ -166,52 +135,9 @@ async fn bootstrap_campaign(client: &Client, campaign_id: &str) -> Result<(), Qu
     Ok(())
 }
 
-/// Bootstraps a session schema.
-#[instrument(level = "debug", name = "bootstrap_session", skip(client))]
-async fn bootstrap_session(client: &Client, session_id: &Uuid) -> Result<(), QueryResult> {
-    let schema_key = uuid_to_schema_key(session_id);
-
-    // Layer 0: Schema
-    let sql = session::SCHEMA.replace("${session_id}", &schema_key);
-    if let Err(e) = client.execute(&sql, &[]).await {
-        return Err(transient_error("Failed to create session schema", e));
-    }
-
-    // Layer 1: Tables
-    let sql = session::PLAYER_DATA.replace("${session_id}", &schema_key);
-    if let Err(e) = client.execute(&sql, &[]).await {
-        return Err(transient_error("Failed to create session player_data", e));
-    }
-
-    // Layer 1b: Index
-    let sql = session::PLAYER_DATA_IDX.replace("${session_id}", &schema_key);
-    if let Err(e) = client.execute(&sql, &[]).await {
-        return Err(transient_error("Failed to create session index", e));
-    }
-
-    // Layer 2: Function
-    let sql = session::FN_PROMOTE.replace("${session_id}", &schema_key);
-    if let Err(e) = client.execute(&sql, &[]).await {
-        return Err(transient_error("Failed to create promote function", e));
-    }
-
-    // Layer 3: Trigger
-    let sql = session::TRIGGER_PROMOTE.replace("${session_id}", &schema_key);
-    if let Err(e) = client.execute(&sql, &[]).await {
-        return Err(transient_error("Failed to create promote trigger", e));
-    }
-
-    info!(session_id = %session_id, "session schema bootstrapped");
-    Ok(())
-}
-
-/// Full database bootstrap: master + optional campaign + session.
-#[instrument(level = "debug", skip_all, fields(session_id = %session_id, campaign_id = ?campaign_id, world = %world))]
-async fn do_bootstrap(
-    session_id: &Uuid,
-    campaign_id: Option<String>,
-    world: String,
-) -> QueryResult {
+/// Full database bootstrap: master + optional campaign.
+#[instrument(level = "debug", skip_all, fields(campaign_id = ?campaign_id))]
+async fn do_bootstrap(campaign_id: Option<String>) -> QueryResult {
     let db = match get_db().await {
         Ok(db) => db,
         Err(e) => return transient_error("Failed to get database handle", e),
@@ -234,47 +160,15 @@ async fn do_bootstrap(
         }
     }
 
-    // Phase 3: Session schema
-    if let Err(result) = bootstrap_session(&client, session_id).await {
-        return result;
-    }
-
-    // Phase 4: Register session
-    let register_sql = r#"
-        INSERT INTO skua_master.sessions (session_id, world, campaign_id, is_active)
-        VALUES ($1, $2, $3, TRUE)
-        ON CONFLICT (session_id) DO UPDATE
-        SET is_active = TRUE,
-            heartbeat = NOW(),
-            deadline = NOW() + INTERVAL '10 minutes'
-    "#;
-
-    let campaign_schema = campaign_id.map(|cid| format!("skua_campaign_{}", cid.replace('-', "_")));
-    if let Err(e) = client
-        .execute(register_sql, &[session_id, &world, &campaign_schema])
-        .await
-    {
-        return transient_error("Failed to register session", e);
-    }
-
     db.set_state(DatabaseState::ConnectedInit);
 
-    // Start background heartbeat task
-    heartbeat::start();
-
-    info!(
-        session_id = %session_id,
-        campaign_id = ?campaign_schema,
-        world = %world,
-        "bootstrap complete"
-    );
+    info!(campaign_id = ?campaign_id, "bootstrap complete");
 
     QueryResult::done()
 }
 
 /// Entry point for bootstrap (Arma command).
-pub fn bootstrap(ctx: Context, campaign_id: String, terrain: String) -> QueryState {
-    let session_id = *SESSION_ID;
+pub fn bootstrap(ctx: Context, campaign_id: String) -> QueryState {
     let campaign = if campaign_id.is_empty() {
         None
     } else {
@@ -285,39 +179,8 @@ pub fn bootstrap(ctx: Context, campaign_id: String, terrain: String) -> QuerySta
     };
 
     RUNTIME.spawn(async move {
-        let result = do_bootstrap(&session_id, campaign, terrain).await;
+        let result = do_bootstrap(campaign).await;
         let _ = ctx.callback_data("skua:database", "bootstrap", result);
-    });
-
-    QueryState::Processing
-}
-
-/// End session command.
-pub fn end_session(ctx: Context) -> QueryState {
-    let session_uuid = *SESSION_ID;
-
-    // Stop the heartbeat task
-    heartbeat::stop();
-
-    RUNTIME.spawn(async move {
-        let client = match get_client().await {
-            Ok(c) => c,
-            Err(e) => {
-                let result = transient_error("Failed to get client", e);
-                let _ = ctx.callback_data("skua:database", "end_session", result);
-                return;
-            }
-        };
-
-        let sql = "UPDATE skua_master.sessions SET is_active = FALSE WHERE session_id = $1";
-        if let Err(e) = client.execute(sql, &[&session_uuid]).await {
-            let result = transient_error("Failed to end session", e);
-            let _ = ctx.callback_data("skua:database", "end_session", result);
-            return;
-        }
-
-        info!(session_id = %session_uuid, "session ended");
-        let _ = ctx.callback_data("skua:database", "end_session", QueryResult::done());
     });
 
     QueryState::Processing

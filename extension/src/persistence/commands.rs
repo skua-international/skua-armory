@@ -3,12 +3,12 @@
 // Arma-callable persistence commands.
 
 use arma_rs::{Context, Group};
-use tracing::{error, info, instrument};
+use tracing::{error, info, instrument, warn};
 
 use super::types::{ObjectData, ObjectPosition, PersistedObject, PlayerData, UnitData};
 use crate::core::RUNTIME;
 use crate::database::{DatabaseState, get_client, get_state};
-use crate::domain::{CampaignId, SessionId};
+use crate::domain::CampaignId;
 use crate::error::{QueryResult, QueryState, transient_error};
 
 /// Command group for persistence operations.
@@ -21,7 +21,6 @@ pub fn save(
     ctx: Context,
     serialized_object: PersistedObject,
     campaign_id: CampaignId,
-    session_id: SessionId,
 ) -> QueryResult {
     // Check database is bootstrapped
     let state = get_state();
@@ -40,7 +39,7 @@ pub fn save(
             unit,
             player,
         } => {
-            save_player(ctx, campaign_id, session_id, object, unit, player);
+            save_player(ctx, campaign_id, object, unit, player);
         }
         PersistedObject::Container { .. } => {
             unimplemented!("Container persistence not yet implemented");
@@ -56,33 +55,30 @@ pub fn save(
     QueryResult::processing()
 }
 
-/// Saves player data to the session schema.
+/// Saves player data to campaign storage.
 ///
-/// This function saves the player's current state to the ephemeral session storage.
-/// If the session is associated with a campaign, the database trigger will automatically
-/// promote the data to campaign storage using timestamp-based conflict resolution.
+/// This function saves the player's current state directly to campaign storage.
+/// If no campaign is set, the save is skipped.
 ///
 /// # Requirements
 /// - Database must be bootstrapped (state = ConnectedInit)
-/// - Session schema must exist
+/// - Campaign schema must exist
 ///
 /// # Arguments
 /// - `ctx` - Context provider for callbacks
 /// - `campaign_id` - Campaign ID (may be nil UUID if not in a campaign)
-/// - `session_id` - Current session UUID
 /// - `object` - Base object data (position, world, etc.)
 /// - `unit` - Unit-specific data (loadout, medical state)
 /// - `player` - Player-specific data (steam_id, rank)
 fn save_player(
     ctx: Context,
     campaign_id: CampaignId,
-    session_id: SessionId,
     object: ObjectData,
     unit: UnitData,
     player: PlayerData,
 ) {
     RUNTIME.spawn(async move {
-        let result = do_save_player(campaign_id, session_id, object, unit, player).await;
+        let result = do_save_player(campaign_id, object, unit, player).await;
         let _ = ctx.callback_data("skua:persistence", "save_player", result);
     });
 }
@@ -96,28 +92,25 @@ fn save_player(
 )]
 async fn do_save_player(
     campaign_id: CampaignId,
-    session_id: SessionId,
     object: ObjectData,
     unit: UnitData,
     player: PlayerData,
 ) -> QueryResult {
+    // Skip if no campaign is set
+    if campaign_id.is_nil() {
+        warn!(steam_id = %player.steam_id, "no campaign set, skipping save");
+        return QueryResult::done();
+    }
+
     // Get database client
     let client = match get_client().await {
         Ok(c) => c,
         Err(e) => return transient_error("Failed to get database client", e),
     };
 
-    // Build schema name from session UUID
-    let table_name = format!("skua_session_{}.player_data", session_id.to_schema_key());
+    let schema_key = campaign_id.to_schema_key();
 
-    // Determine campaign_id for promotion (nil UUID means no campaign)
-    let campaign_schema: Option<String> = if campaign_id.is_nil() {
-        None
-    } else {
-        Some(format!("skua_campaign_{}", campaign_id.to_schema_key()))
-    };
-
-    // Serialize data
+    // Serialize position
     let serialized_position = serde_json::to_string(&ObjectPosition {
         position: object.position,
         orientation: object.orientation,
@@ -135,46 +128,49 @@ async fn do_save_player(
     // Medical data is already JsonValue
     let medical_data = unit.medical_state.clone();
 
-    // Upsert into session player_data
-    // The table schema is:
-    // steam_id, world, campaign_id, loadout, position, medical_data, saved_at, deadline
-    let sql = format!(
+    // Upsert into campaign player_data (loadout, medical_data)
+    let player_data_sql = format!(
         r#"
-        INSERT INTO {} (steam_id, world, campaign_id, loadout, position, medical_data, saved_at, deadline)
-        VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW() + INTERVAL '30 minutes')
+        INSERT INTO skua_campaign_{}.player_data (steam_id, loadout, medical_data, last_updated)
+        VALUES ($1, $2, $3, NOW())
         ON CONFLICT (steam_id) DO UPDATE
-        SET world = EXCLUDED.world,
-            campaign_id = EXCLUDED.campaign_id,
-            loadout = EXCLUDED.loadout,
-            position = EXCLUDED.position,
+        SET loadout = EXCLUDED.loadout,
             medical_data = EXCLUDED.medical_data,
-            saved_at = NOW(),
-            deadline = NOW() + INTERVAL '30 minutes'
+            last_updated = NOW()
         "#,
-        table_name
+        schema_key
     );
 
     if let Err(e) = client
-        .execute(
-            &sql,
-            &[
-                &player.steam_id,
-                &object.last_world,
-                &campaign_schema,
-                &loadout_str,
-                &position,
-                &medical_data,
-            ],
-        )
+        .execute(&player_data_sql, &[&player.steam_id, &loadout_str, &medical_data])
         .await
     {
         return transient_error("Failed to save player data", e);
     }
 
+    // Upsert into campaign player_world_data (position)
+    let world_data_sql = format!(
+        r#"
+        INSERT INTO skua_campaign_{}.player_world_data (steam_id, world, position, last_updated)
+        VALUES ($1, $2, $3, NOW())
+        ON CONFLICT (steam_id, world) DO UPDATE
+        SET position = EXCLUDED.position,
+            last_updated = NOW()
+        "#,
+        schema_key
+    );
+
+    if let Err(e) = client
+        .execute(&world_data_sql, &[&player.steam_id, &object.last_world, &position])
+        .await
+    {
+        return transient_error("Failed to save player world data", e);
+    }
+
     info!(
         steam_id = %player.steam_id,
         world = %object.last_world,
-        campaign = ?campaign_schema,
+        campaign = %schema_key,
         "player data saved"
     );
 

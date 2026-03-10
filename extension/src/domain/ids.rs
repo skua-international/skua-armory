@@ -19,6 +19,13 @@ impl Display for PlayerId {
     }
 }
 
+impl PlayerId {
+    /// Returns the Steam ID as an i64 for database queries expecting BIGINT.
+    pub fn as_i64(&self) -> i64 {
+        self.0 as i64
+    }
+}
+
 impl From<u64> for PlayerId {
     fn from(value: u64) -> Self {
         PlayerId(value)
@@ -118,47 +125,6 @@ impl From<CampaignId> for String {
 }
 
 impl IntoArma for CampaignId {
-    fn to_arma(&self) -> arma_rs::Value {
-        arma_rs::Value::String(self.0.to_string())
-    }
-}
-
-/// Session identifier.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, FromArma, Serialize, Deserialize)]
-pub struct SessionId(Uuid);
-
-impl SessionId {
-    /// Returns the schema key format (hyphens replaced with underscores).
-    pub fn to_schema_key(&self) -> String {
-        self.0.to_string().replace('-', "_")
-    }
-}
-
-impl From<Uuid> for SessionId {
-    fn from(value: Uuid) -> Self {
-        SessionId(value)
-    }
-}
-
-impl From<SessionId> for Uuid {
-    fn from(value: SessionId) -> Self {
-        value.0
-    }
-}
-
-impl From<String> for SessionId {
-    fn from(value: String) -> Self {
-        SessionId(value.parse().unwrap_or(Uuid::nil()))
-    }
-}
-
-impl From<SessionId> for String {
-    fn from(value: SessionId) -> Self {
-        value.0.to_string()
-    }
-}
-
-impl IntoArma for SessionId {
     fn to_arma(&self) -> arma_rs::Value {
         arma_rs::Value::String(self.0.to_string())
     }
