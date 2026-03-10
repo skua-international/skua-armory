@@ -1,5 +1,17 @@
 PREP(canOpenBaseArsenal);
+PREP(canOpenLogisticsMenu);
+PREP(compileLogisticsMenuActions);
+PREP(compileLogisticsObjects);
 PREP(createArsenalArea);
+PREP(createLogisticsArea);
+PREP(inAnySideArea);
+PREP(logistics_initDispenser);
+PREP(logistics_getMajorParts);
+PREP(logistics_makeLogiObjectAction);
+PREP(logistics_onPull60mmAmmo);
+PREP(logistics_onPullFuelCanister);
+PREP(makeLogisticsActions);
 PREP(moduleArsenalAddArea);
 PREP(moduleArsenalSetReference);
+PREP(moduleLogisticsAddArea);
 PREP(openBaseArsenal);

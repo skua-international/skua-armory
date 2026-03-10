@@ -18,10 +18,16 @@
 params ["_logic"];
 TRACE_1("fnc_moduleArsenalSetReference",_this);
 
-private _objectName = _logic getVariable ["RefObject", ""];
-if (_objectName isEqualTo "") exitWith {};
+private _refObject = _logic getVariable ["RefObject", ""];
+private _object = switch (true) do {
+    case (_refObject isEqualType ""): {
+        missionNamespace getVariable [_refObject, objNull]
+    };
+    case (_refObject isEqualType objNull): {
+        _refObject
+    };
+};
 
-private _object = missionNamespace getVariable [_objectName, objNull];
 if (isNull _object) exitWith {};
 
 private _side = _logic getVariable ["Side", 1];
@@ -37,7 +43,7 @@ if (_side == sideUnknown) then {
     // Set for all sides
     {
         GVAR(baseArsenals) set [_x, _object];
-    } forEach (values GVAR(baseArsenals));
+    } forEach (keys GVAR(baseArsenals));
 } else {
     // Set for specified side
     GVAR(baseArsenals) set [_side, _object];
