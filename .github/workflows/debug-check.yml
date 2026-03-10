@@ -1,0 +1,17 @@
+name: Debug Check
+
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+
+jobs:
+  check-debug-macros:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout the source code
+      uses: actions/checkout@v6
+
+    - name: Check for uncommented debug macros
+      run: bash tools/check_debug_macros.sh
