@@ -10,8 +10,12 @@ class CfgVehicles {
         // essentially a way to compress multiple cargo items into a single item,
         // to simplify loading/unloading/paradropping
         // e.g. you can load 2 spare wheels into this box and then load that box into a vehicle
+        ace_dragging_canDrag = 1;
+        ace_dragging_canCarry = 1;
         ace_cargo_size = 2;
         ace_cargo_space = 2;
+        ace_cargo_canLoad = 1;
+        ace_cargo_hasCargo = 1;
         class TransportItems {};
         class TransportWeapons {};
         class TransportMagazines {};
@@ -28,6 +32,8 @@ class CfgVehicles {
         ace_dragging_ignoreWeightCarry = 1;
         ace_cargo_size = 1;
         ace_cargo_space = 0;
+        ace_cargo_canLoad = 1;
+        ace_cargo_hasCargo = 1;
         class TransportItems {};
         class TransportWeapons {};
         class TransportMagazines {};
