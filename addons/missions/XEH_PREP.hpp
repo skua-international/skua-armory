@@ -5,7 +5,7 @@ PREP(compileLogisticsObjects);
 PREP(createArsenalArea);
 PREP(createLogisticsArea);
 PREP(inAnySideArea);
-PREP(logistics_addDispenserActions);
+PREP(logistics_initDispenser);
 PREP(logistics_getMajorParts);
 PREP(logistics_makeLogiObjectAction);
 PREP(logistics_onPull60mmAmmo);

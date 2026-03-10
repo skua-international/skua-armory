@@ -10,7 +10,7 @@
  * None. <NONE>
  *
  * Example:
- * [object] call skua_missions_fnc_logistics_addDispenserActions;
+ * [object] call skua_missions_fnc_logistics_initDispenser;
  *
  * Public: No
  */
@@ -18,7 +18,7 @@
 #define INTERACTION_DISTANCE 8
 
 params ["_dispenser"];
-TRACE_1("fnc_logistics_addDispenserActions",_this);
+TRACE_1("fnc_logistics_initDispenser",_this);
 
 private _menu = [
     QGVAR(logisticsMenu),
