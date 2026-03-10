@@ -26,7 +26,7 @@ private _menu = [
     "\A3\ui_f\data\igui\cfg\simpletasks\types\rearm_ca.paa",
     {true}, // statement
     {true}, // condition
-    FUNC(makeLogisticsActions) // children
+    {_target call FUNC(makeLogisticsActions)} // children
 ] call ACEFUNC(interact_menu,createAction);
 
 [_dispenser, 0, ["ACE_MainActions"], _menu] call ACEFUNC(interact_menu,addActionToObject);

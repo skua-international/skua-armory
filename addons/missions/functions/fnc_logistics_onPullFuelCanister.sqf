@@ -18,4 +18,7 @@
 params ["_object"];
 TRACE_1("fnc_logistics_onPullFuelCanister",_this);
 
-[_object, 0] call ACEFUNC(refuel,setFuel);
+[{
+    [_this, 0] call ACEFUNC(refuel,setFuel);
+}, _object] call CBA_fnc_execNextFrame;
+

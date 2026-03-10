@@ -6,6 +6,9 @@ PREP_RECOMPILE_START;
 #include "XEH_PREP.hpp"
 PREP_RECOMPILE_END;
 
+GVAR(logisticsObjects) = call FUNC(compileLogisticsObjects);
+GVAR(logisticsMenuActions) = call FUNC(compileLogisticsMenuActions);
+
 GVAR(arsenalAreas) = createHashMapFromArray [
     [west, []],
     [east, []],

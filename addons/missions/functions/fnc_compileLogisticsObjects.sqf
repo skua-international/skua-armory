@@ -1,7 +1,7 @@
 #include "..\script_component.hpp"
 /*
  * Authors: LinkIsGrim
- * Get Logistics Objects from Config.
+ * Compile Logistics Objects from Config.
  *
  * Arguments:
  * None.
@@ -10,12 +10,12 @@
  * Array of logistics actions objects.
  *
  * Example:
- * call skua_missions_fnc_logistics_getObjects;
+ * call skua_missions_fnc_compileLogisticsObjects;
  *
  * Public: No
  */
 
-TRACE_1("fnc_logistics_getObjects","");
+TRACE_1("fnc_compileLogisticsObjects","");
 
 private _cfg = configFile >> QGVAR(logisticsItems);
 

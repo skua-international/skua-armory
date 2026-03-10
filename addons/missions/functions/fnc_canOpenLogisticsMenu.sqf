@@ -17,8 +17,4 @@
  */
 params ["_unit"];
 
-private _side = side group _unit;
-
-private _areas = GVAR(logisticsAreas) get _side;
-
-_areas findIf {_unit inArea _x} != -1 // return
+[_unit, GVAR(logisticsAreas)] call FUNC(inAnySideArea) // return

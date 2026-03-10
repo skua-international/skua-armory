@@ -1,10 +1,10 @@
 #include "..\script_component.hpp"
 /*
  * Authors: LinkIsGrim
- * Build the Logistics Menu action tree.
+ * Build the Logistics Menu action tree for an object.
  *
  * Arguments:
- * None.
+ * 0: Target object <OBJECT>
  *
  * Return Value:
  * Return description <NONE>
@@ -14,11 +14,12 @@
  *
  * Public: No
  */
+params ["_target"];
 TRACE_1("fnc_makeLogisticsActions",_this);
 
-if (isNil QGVAR(logisticsMenuActions)) then {
-    private _objects = call FUNC(logistics_getObjects);
-    GVAR(logisticsMenuActions) = _objects apply { _x call FUNC(logistics_makeLogiObjectAction) };
-};
+private _actions = [];
+{
+    _actions pushBack [_x, [], _target];
+} forEach GVAR(logisticsMenuActions);
 
-GVAR(logisticsMenuActions) // return
+_actions // return

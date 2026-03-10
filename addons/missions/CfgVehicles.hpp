@@ -120,21 +120,17 @@ class CfgVehicles {
                 displayName = "Arsenal";
                 condition = QUOTE(_player call FUNC(canOpenBaseArsenal));
                 icon = "\A3\ui_f\data\igui\cfg\simpletasks\types\rearm_ca.paa";
-                statement = "";
                 class GVAR(openBaseArsenal) {
                     displayName = "Open Base Arsenal";
-                    condition = "true";
                     icon = "\A3\ui_f\data\igui\cfg\simpletasks\types\rearm_ca.paa";
                     statement = QUOTE(_player call FUNC(openBaseArsenal));
-                    showDisabled = 0;
                 };
             };
             class GVAR(logisticsMenu) {
                 displayName = "Logistics";
                 condition = QUOTE(_player call FUNC(canOpenLogisticsMenu));
                 icon = "\A3\ui_f\data\igui\cfg\simpletasks\types\rearm_ca.paa";
-                statement = "";
-                children = QFUNC(makeLogisticsActions);
+                insertChildren = QUOTE(_target call FUNC(makeLogisticsActions));
             };
         };
     };

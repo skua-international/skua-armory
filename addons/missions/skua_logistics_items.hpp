@@ -1,4 +1,13 @@
 class GVAR(logisticsItems) {
+    // Keep sub menus at the top for players using interaction menu as lists + cursor uncentered
+    // otherwise it gets cut out at the bottom of the screen at lower resolutions
+    class FleffSparePartsParent {
+        displayName = "Repair Parts";
+        object = "";
+        description = "sub-menu for Fleffs Advanced Repair Major Parts.";
+        price = 0; // Placeholder, not gonna be set here
+        children = QFUNC(logistics_getMajorParts);
+    };
     class SpareWheel {
         displayName = "Spare Wheel";
         object = "ACE_Wheel";
@@ -11,16 +20,23 @@ class GVAR(logisticsItems) {
         description = "A spare track for tracked vehicles.";
         price = 0; // Placeholder, not gonna be set here
     };
-    /* class FuelCanister {
-        displayName = "Fuel Canister";
+    class FuelCanister {
+        displayName = "Fuel Canister (20L)";
         object = "Land_CanisterFuel_F";
         description = "An empty fuel canister for refueling vehicles.";
         price = 0; // Placeholder, not gonna be set here
         onPull = QFUNC(logistics_onPullFuelCanister);
-    }; */
+    };
+    class FuelReservoir {
+        displayName = "Fuel Reservoir (300L)";
+        object = "FlexibleTank_01_forest_F";
+        description = "A large fuel reservoir for refueling vehicles.";
+        price = 0; // Placeholder, not gonna be set here
+        onPull = QFUNC(logistics_onPullFuelCanister);
+    };
     class CargoNet {
         displayName = "Cargo Net";
-        object = "APM_largeBox";
+        object = "APM_large_box";
         description = "A weightless cargo net for packing ACE Cargo.";
         price = 0; // Placeholder, not gonna be set here
     };
@@ -38,9 +54,10 @@ class GVAR(logisticsItems) {
     };
     class AmmoBoxMortar60mm {
         displayName = "60mm Ammo Box";
-        object = "Box_60mm_AMMO_F";
+        object = "ACE_Box_82mm_Mo_Combo";
         description = "A box of 60mm mortar ammunition.";
         price = 0; // Placeholder, not gonna be set here
+        onPull = QFUNC(logistics_onPull60mmAmmo);
     };
     class SparePartsBox {
         displayName = "Spare Parts Box";
@@ -48,13 +65,6 @@ class GVAR(logisticsItems) {
         description = "A box containing spare parts for vehicle repairs.";
         price = 0; // Placeholder, not gonna be set here
     };
-    /* class FleffSparePartsParent {
-        displayName = "Repair Parts";
-        object = "";
-        description = "sub-menu for Fleffs Advanced Repair Major Parts.";
-        price = 0; // Placeholder, not gonna be set here
-        children = QFUNC(logistics_getMajorParts);
-    }; */
     class MedicalBox {
         displayName = "Medical Box";
         object = "ACE_medicalSupplyCrate_advanced";

@@ -61,10 +61,11 @@ private _childActions = if (_children isEqualTo []) then {
             format [QGVAR(logisticsMenu_%1_%2), _class, _x],
             _x,
             getText (configFile >> "CfgVehicles" >> _x >> "displayName"),
-            [],
+            "",
             _onPull
         ] call FUNC(logistics_makeLogiObjectAction)
     };
+    _childActionArray = _childActionArray apply {[_x, [], _target]};
 
     private _strArray = str _childActionArray;
     compile _strArray // return array of child actions
