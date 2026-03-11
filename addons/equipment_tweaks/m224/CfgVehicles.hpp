@@ -13,8 +13,12 @@ class CfgVehicles {
     };
     // Enable fire on load for the 60mm CSW variant
     class NDS_M224_mortar_base: Mortar_01_base_F {
+        class EventHandlers {
+            GetIn = "if (local (_this select 0)) then {(_this select 0) animatesource [""foldweapon"",1];}";
+            GetOut = "if (local (_this select 0)) then {(_this select 0) animatesource [""foldweapon"",1];}";
+        };
         class ace_csw: ace_csw {
-            enableFireOnLoad = 1;
+            allowFireOnLoad = 1;
             ammoLoadTime = 0.5;
             ammoUnloadTime = 0.5;
             proxyWeapon = "avm224_W_M224_mortar_proxy";
@@ -25,7 +29,7 @@ class CfgVehicles {
     class NDS_M224_mortar;
     class avm224_M224_mortar: NDS_M224_mortar {
         class ace_csw {
-            enableFireOnLoad = 1;
+            allowFireOnLoad = 1;
             ammoLoadTime = 0.5;
             ammoUnloadTime = 0.5;
             // proxyWeapon = "avm224_W_M224_mortar_proxy";

@@ -7,7 +7,8 @@ class CfgPatches {
         weapons[] = {};
         requiredVersion = REQUIRED_VERSION;
         requiredAddons[] = {
-            "skua_main"
+            "skua_equipment_tweaks",
+            "avm224_mortar"
         };
         skipWhenMissingDependencies = 1;
         VERSION_CONFIG;
