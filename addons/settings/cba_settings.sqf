@@ -64,7 +64,7 @@ ace_csw_defaultAssemblyMode = true;
 ace_csw_dragAfterDeploy = true;
 ace_csw_handleExtraMagazines = true;
 ace_csw_handleExtraMagazinesType = 1;
-ace_csw_progressBarTimeCoefficent = 1;
+ace_csw_progressBarTimeCoefficent = 0.25;
 
 // ACE Dragging
 ace_dragging_allowRunWithLightweight = true;
