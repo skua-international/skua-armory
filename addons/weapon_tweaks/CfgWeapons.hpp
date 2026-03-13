@@ -58,7 +58,7 @@ class CfgWeapons {
         magazineWell[] += {"PistolHeavy_01_45ACP"};
     };
 
-    class arifle_ash12_RF: Rifle_Base_f {
+    class arifle_ash12_RF: Rifle_Base_F {
         magazineWell[] = {"ASH12_127x55_RF"}; // Redefining the magwell to exclude incompatible magazines (e.g. CBA_9x19_Glock_Cpct,CBA_9x19_Glock_Full)
     };
 };
