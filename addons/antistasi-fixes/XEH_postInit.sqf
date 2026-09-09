@@ -33,6 +33,30 @@ if (!isNil "A3A_fnc_initObject") then {
             [_object, true, nil, nil, true, true] call ace_dragging_fnc_setCarryable;
         };
 
+        // Medical tent: add a scroll-wheel action to buy a medical supply
+        // crate on the spot, via A3A_fnc_buyItem - the exact same function
+        // the shop UI's own buy button calls (confirmed via source,
+        // gui/functions/GUI/fn_buyVehicleTabs.sqf), so cost, purchase
+        // cooldown, commander-only gating and placement behavior are
+        // identical to buying it normally, not reimplemented here. Saves a
+        // trip back to a trader to resupply a tent that's already placed.
+        private _medTentType = if (isNil "A3A_faction_reb") then {""} else {A3A_faction_reb getOrDefault ["vehicleHealthStation", ""]};
+        if (_medTentType != "" && {typeOf _object isEqualTo _medTentType}) then {
+            private _medBoxType = (A3A_faction_reb getOrDefault ["vehicleMedicalBox", ["", 0]]) select 0;
+            if (_medBoxType != "") then {
+                _object addAction [
+                    format ["Buy %1", getText (configFile >> "CfgVehicles" >> _medBoxType >> "displayName")],
+                    {
+                        params ["", "", "", "_medBoxType"];
+                        [player, _medBoxType] call A3A_fnc_buyItem;
+                    },
+                    _medBoxType,
+                    1.5, false, true, "",
+                    "alive _target"
+                ];
+            };
+        };
+
         _result
     };
 };
