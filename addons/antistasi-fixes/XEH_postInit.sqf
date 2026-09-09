@@ -103,6 +103,28 @@ if (!isNil "A3A_fnc_initUtilityItems") then {
                     [_object, true, nil, nil, true, true] call ace_dragging_fnc_setCarryable;
                 }, true, [], true] call CBA_fnc_addClassEventHandler;
             } forEach _classnames;
+
+            // Medical tents (bought/placed via the utility item shop,
+            // FactionGet(reb, "vehicleHealthStation")) don't persist across
+            // a mission restart, unlike objects placed through the building
+            // placer - confirmed via source, fn_saveLoop.sqf's save
+            // collection only includes utility items whose own
+            // A3A_utilityItemHM flags contain "save"
+            // (`"save" in ((A3A_utilityItemHM get typeOf _x) select 4)`),
+            // and the tent's own registration
+            // (["place", "move", "rotate", "pack"]) never had it. Appending
+            // to the existing entry's flags rather than replacing it, so
+            // its other behavior (placeable, movable, rotatable, packable)
+            // is untouched.
+            private _medTentType = A3A_faction_reb getOrDefault ["vehicleHealthStation", ""];
+            if (_medTentType != "") then {
+                private _entry = A3A_utilityItemHM getOrDefault [_medTentType, []];
+                if (_entry isNotEqualTo [] && {!("save" in (_entry select 4))}) then {
+                    private _updated = +_entry;
+                    _updated set [4, (_entry select 4) + ["save"]];
+                    A3A_utilityItemHM set [_medTentType, _updated];
+                };
+            };
         };
 
         _result
