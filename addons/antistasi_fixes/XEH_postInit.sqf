@@ -38,7 +38,14 @@ if (!isNil "A3A_fnc_initObject") then {
     GVAR(originalInitObject) = A3A_fnc_initObject;
     A3A_fnc_initObject = {
         params [["_object", objNull, [objNull]]];
-        private _result = _this call GVAR(originalInitObject);
+        // Not capturing a return value - confirmed via source every real
+        // caller invokes A3A_fnc_initObject bare (no capture), so nothing
+        // reads it. `private _result = ... call ...` has broken in
+        // non-obvious ways more than once elsewhere in this file (see the
+        // A3A_fnc_mrkUpdate/initUtilityItems/setOutpostCost fixes) - not
+        // capturing it here preemptively rather than waiting for a field
+        // report on this one too.
+        _this call GVAR(originalInitObject);
 
         private _entry = if (isNil "A3A_utilityItemHM") then {[]} else {A3A_utilityItemHM getOrDefault [typeOf _object, []]};
         private _flags = _entry param [4, []];
@@ -81,8 +88,6 @@ if (!isNil "A3A_fnc_initObject") then {
                 ];
             };
         };
-
-        _result
     };
 };
 
@@ -343,10 +348,12 @@ if (!isNil "SCRT_fnc_outpost_createWatchpost") then {
 
     GVAR(originalPopulateCommanderMenu) = SCRT_fnc_ui_populateCommanderMenu;
     SCRT_fnc_ui_populateCommanderMenu = {
-        private _result = _this call GVAR(originalPopulateCommanderMenu);
+        // Not capturing a return value - confirmed via source the only real
+        // caller invokes this bare (no capture). Same reasoning as the
+        // other wraps in this file that had this bite them.
+        _this call GVAR(originalPopulateCommanderMenu);
         private _idx = lbAdd [2750, "Combat Outpost"];
         lbSetData [2750, _idx, "COMBATPOST"];
-        _result
     };
 
     // Cost is identical to WATCHPOST's own formula, so rather than
@@ -408,7 +415,12 @@ if (!isNil "SCRT_fnc_outpost_createWatchpost") then {
         GVAR(pendingAggressiveOutpost) = false;
         private _before = +watchpostsFIA;
 
-        private _result = _this call GVAR(originalCreateWatchpost);
+        // Not capturing a return value - confirmed via source the only real
+        // caller invokes this via remoteExec (inherently fire-and-forget,
+        // scrt/UI/fn_ui_establishOutpostEventHandler.sqf), so nothing reads
+        // it. Same reasoning as the A3A_fnc_mrkUpdate/initUtilityItems/
+        // setOutpostCost fixes elsewhere in this file.
+        _this call GVAR(originalCreateWatchpost);
 
         if (_aggressive) then {
             {
@@ -416,8 +428,6 @@ if (!isNil "SCRT_fnc_outpost_createWatchpost") then {
                 [_x] remoteExec ["A3A_fnc_mrkUpdate", 0, true];
             } forEach (watchpostsFIA - _before);
         };
-
-        _result
     };
 
     // Color-only marker differentiation, per explicit simplification - no
@@ -431,7 +441,15 @@ if (!isNil "SCRT_fnc_outpost_createWatchpost") then {
     GVAR(originalMrkUpdate) = A3A_fnc_mrkUpdate;
     A3A_fnc_mrkUpdate = {
         params [["_markerName", "", [""]]];
-        private _result = _this call GVAR(originalMrkUpdate);
+        // Not capturing a return value - field-reported "Undefined variable
+        // in expression: _result" once this ran (same shape as the
+        // initUtilityItems/setOutpostCost fixes above: `private _result =
+        // ... call ...` breaking in ways this addon has hit more than once
+        // now). Confirmed via source every real caller of A3A_fnc_mrkUpdate
+        // invokes it bare (`call A3A_fnc_mrkUpdate;`, no capture) or via
+        // remoteExec (inherently fire-and-forget) - nothing anywhere reads
+        // its return value, so there's nothing to preserve here either.
+        _this call GVAR(originalMrkUpdate);
 
         private _originalName = if (_markerName find "Dum" == 0) then {
             _markerName select [3, (count _markerName) - 3]
@@ -444,8 +462,6 @@ if (!isNil "SCRT_fnc_outpost_createWatchpost") then {
             private _visibleMarkerName = [_originalName, _dummyName] select (markerShape _dummyName != "");
             _visibleMarkerName setMarkerColorLocal "ColorRed";
         };
-
-        _result
     };
 
     // Vendored copy of Ultimate's core/functions/Outpost/fn_outpost_createWatchpostDistance.sqf -
@@ -524,17 +540,23 @@ if (!isNil "SCRT_fnc_outpost_createWatchpost") then {
     if (!isNil "A3A_fnc_saveLoop") then {
         GVAR(originalSaveLoop) = A3A_fnc_saveLoop;
         A3A_fnc_saveLoop = {
-            private _result = _this call GVAR(originalSaveLoop);
+            // Not capturing a return value - confirmed via source the only
+            // real caller invokes this via remoteExecCall with no capture.
+            // Same reasoning as the other wraps in this file that had this
+            // bite them.
+            _this call GVAR(originalSaveLoop);
             private _flags = watchpostsFIA apply {_x call GVAR(fnc_isAggressiveOutpost)};
             [QGVAR(aggressiveOutpostFlags), _flags] call A3A_fnc_setStatVariable;
-            _result
         };
     };
 
     if (!isNil "A3A_fnc_loadServer") then {
         GVAR(originalLoadServer) = A3A_fnc_loadServer;
         A3A_fnc_loadServer = {
-            private _result = _this call GVAR(originalLoadServer);
+            // Not capturing a return value - confirmed via source the only
+            // real caller invokes this bare. Same reasoning as the other
+            // wraps in this file that had this bite them.
+            _this call GVAR(originalLoadServer);
 
             private _flags = [QGVAR(aggressiveOutpostFlags)] call A3A_fnc_returnSavedStat;
             if (!isNil "_flags" && {count _flags == count watchpostsFIA}) then {
@@ -548,8 +570,6 @@ if (!isNil "SCRT_fnc_outpost_createWatchpost") then {
                     [watchpostsFIA] remoteExec ["A3U_fnc_mrkUpdateBulk", 0, true];
                 };
             };
-
-            _result
         };
     };
 };
