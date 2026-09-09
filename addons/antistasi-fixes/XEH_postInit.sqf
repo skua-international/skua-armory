@@ -37,6 +37,78 @@ if (!isNil "A3A_fnc_initObject") then {
     };
 };
 
+// Surrender crates (fn_surrenderAction.sqf) and outpost/base "zone ammo
+// boxes" (fn_createZoneAmmoBox.sqf) get the same carryable/weightless
+// treatment, and are also wired into the garage system's own "void the
+// crate, transfer contents to arsenal" path (garage/Public/fn_addVehicle.sqf's
+// _utilityRefund - triggers when A3A_canGarage is set AND the object's type
+// is registered in A3A_utilityItemHM with the "loot" flag; currently neither
+// is true for either kind of crate).
+//
+// Both fall outside the initObject wrap above: confirmed via source, neither
+// fn_surrenderAction.sqf nor fn_createZoneAmmoBox.sqf ever calls
+// A3A_fnc_initObject, and their classnames aren't fixed like the loot crate
+// either - fn_surrenderAction.sqf resolves Faction(side) get "surrenderCrate"
+// per the surrendering unit's own side (or A3A_faction_riv directly for
+// rivals), fn_createZoneAmmoBox.sqf resolves Faction(side) get "ammobox" per
+// the captured zone's side - varying per faction/mission config (e.g.
+// Box_IND_Wps_F, Box_East_Wps_F, rhs_7ya37_1_single across different faction
+// templates, confirmed via source), not one fixed class to config-patch or
+// type-match against.
+//
+// Resolved dynamically instead, straight from the same three faction
+// hashmaps those two functions themselves read (Faction(SIDE) macro
+// expansion, core/Includes/common.inc: west -> A3A_faction_occ, east ->
+// A3A_faction_inv, opfor -> A3A_faction_riv - civilian/resistance excluded,
+// neither surrenders nor holds a captured zone against the player).
+//
+// Done inside this same A3A_fnc_initObject wrap's sibling,
+// A3A_fnc_initUtilityItems - not at raw postInit - because that function's
+// own docstring requires it be called "after faction loading", and it's the
+// only hook already guaranteed to run at the right time server-side (it's
+// where A3A_utilityItemHM itself gets built, so this is also the one place
+// it's safe to add entries to it). Class registration only needs to happen
+// once, server-side - the CBA "Init" event handler then covers every future
+// spawn of these classes regardless of which function creates it, and
+// ace_dragging_fnc_setCarryable's own global flag (arg 5) syncs the carry
+// state to clients from there, same as the loot crate fix above already
+// relies on.
+if (!isNil "A3A_fnc_initUtilityItems") then {
+    GVAR(originalInitUtilityItems) = A3A_fnc_initUtilityItems;
+    A3A_fnc_initUtilityItems = {
+        private _result = _this call GVAR(originalInitUtilityItems);
+
+        if (isServer) then {
+            private _fnc_resolveClassnames = {
+                params ["_key"];
+                private _classnames = [];
+                {
+                    private _faction = missionNamespace getVariable [_x, createHashMap];
+                    private _class = _faction getOrDefault [_key, ""];
+                    if (_class != "") then {_classnames pushBackUnique _class};
+                } forEach ["A3A_faction_occ", "A3A_faction_inv", "A3A_faction_riv"];
+                _classnames
+            };
+
+            private _classnames = (["surrenderCrate"] call _fnc_resolveClassnames) + (["ammobox"] call _fnc_resolveClassnames);
+
+            {
+                if !(_x in A3A_utilityItemHM) then {
+                    A3A_utilityItemHM set [_x, [_x, -1, "", "", ["move", "loot"]]];
+                };
+
+                [_x, "init", {
+                    params ["_object"];
+                    _object setVariable ["A3A_canGarage", true, true];
+                    [_object, true, nil, nil, true, true] call ace_dragging_fnc_setCarryable;
+                }, true, [], true] call CBA_fnc_addClassEventHandler;
+            } forEach _classnames;
+        };
+
+        _result
+    };
+};
+
 // TEH's own loot_vehicle addon (addons/loot_vehicle/XEH_postInit.sqf) adds a
 // "Pack to the box" ACE self-interaction action on CAManBase (dead bodies)
 // that scavenges everything nearby into a box - but the box it creates is a
