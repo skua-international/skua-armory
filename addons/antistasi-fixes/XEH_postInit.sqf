@@ -80,11 +80,19 @@ if (!isNil "A3A_fnc_initObject") then {
 // templates, confirmed via source), not one fixed class to config-patch or
 // type-match against.
 //
-// Resolved dynamically instead, straight from the same three faction
-// hashmaps those two functions themselves read (Faction(SIDE) macro
-// expansion, core/Includes/common.inc: west -> A3A_faction_occ, east ->
-// A3A_faction_inv, opfor -> A3A_faction_riv - civilian/resistance excluded,
-// neither surrenders nor holds a captured zone against the player).
+// Resolved dynamically instead, straight from the same faction hashmaps
+// those functions themselves read (Faction(SIDE) macro expansion,
+// core/Includes/common.inc: west -> A3A_faction_occ, east -> A3A_faction_inv,
+// opfor -> A3A_faction_riv). A3A_faction_reb (resistance/rebel) is also
+// checked, for CE specifically - confirmed via source that CE's own
+// fn_surrenderAction.sqf resolves the surrender crate from
+// FactionGet(reb, "surrenderCrate") (its own single fixed class), not
+// per-enemy-side like Ultimate/TEH - a real per-variant divergence in where
+// the classname lives, not just which function creates the object.
+// Confirmed CE's own outpost loot crates (fn_garrisonLocal_spawn.sqf ->
+// A3A_fnc_setupLootCrate.sqf, CE's equivalent of fn_createZoneAmmoBox.sqf)
+// resolve "ammobox" the same per-side way Ultimate/TEH do, so no CE-specific
+// handling was needed for that key.
 //
 // Done inside this same A3A_fnc_initObject wrap's sibling,
 // A3A_fnc_initUtilityItems - not at raw postInit - because that function's
@@ -103,6 +111,17 @@ if (!isNil "A3A_fnc_initUtilityItems") then {
         private _result = _this call GVAR(originalInitUtilityItems);
 
         if (isServer) then {
+            // A3A_faction_reb included for CE's sake specifically - confirmed
+            // via source that CE's own fn_surrenderAction.sqf resolves the
+            // surrender crate from FactionGet(reb, "surrenderCrate") (the
+            // REBEL faction's own single fixed class, e.g. Box_IND_Wps_F),
+            // not per-enemy-side like Ultimate/TEH's fn_surrenderAction.sqf
+            // (Faction(_unitSide) get "surrenderCrate", or A3A_faction_riv
+            // for rivals) - a genuine per-variant divergence, not just a
+            // difference in which function creates the crate. Harmless for
+            // the "ammobox" key on any variant - confirmed CE's own
+            // RebelDefaults.sqf has no "ammobox" entry, so this is a no-op
+            // there for that key.
             private _fnc_resolveClassnames = {
                 params ["_key"];
                 private _classnames = [];
@@ -110,7 +129,7 @@ if (!isNil "A3A_fnc_initUtilityItems") then {
                     private _faction = missionNamespace getVariable [_x, createHashMap];
                     private _class = _faction getOrDefault [_key, ""];
                     if (_class != "") then {_classnames pushBackUnique _class};
-                } forEach ["A3A_faction_occ", "A3A_faction_inv", "A3A_faction_riv"];
+                } forEach ["A3A_faction_occ", "A3A_faction_inv", "A3A_faction_riv", "A3A_faction_reb"];
                 _classnames
             };
 
