@@ -149,7 +149,7 @@ if (!isNil "A3A_fnc_initObject") then {
 if (!isNil "A3A_fnc_initUtilityItems") then {
     GVAR(originalInitUtilityItems) = A3A_fnc_initUtilityItems;
     A3A_fnc_initUtilityItems = {
-        private _result = _this call GVAR(originalInitUtilityItems);
+        _this call GVAR(originalInitUtilityItems);
 
         if (isServer) then {
             // A3A_faction_reb included for CE's sake specifically - confirmed
@@ -215,8 +215,6 @@ if (!isNil "A3A_fnc_initUtilityItems") then {
                 };
             };
         };
-
-        _result
     };
 };
 
