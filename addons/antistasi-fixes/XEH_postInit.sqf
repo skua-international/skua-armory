@@ -1,5 +1,23 @@
 #include "script_component.hpp"
 
+// Shared by every crate-like object this addon touches (rebel-buyable loot
+// crate, surrender crate, outpost/garrison ammo box, salvage equipment box) -
+// carryable and weight-exempt (ace_dragging_fnc_setCarryable, see its own
+// call site below for the ignoreWeightCarry reasoning), and ACE
+// cargo-loadable into other vehicles at a fixed, small footprint
+// (ace_cargo_fnc_setSize 1) while not itself accepting cargo
+// (ace_cargo_fnc_setSpace 0 - these are boxes to carry, not vehicles that
+// hold other cargo). Both cargo functions are "global effect... adds the
+// [...] action menu if necessary" per their own docs
+// (ace3/docs/wiki/framework/cargo-framework.md) - same self-contained,
+// call-and-done shape as setCarryable, nothing else needed.
+GVAR(makeCrateLootable) = {
+    params ["_object"];
+    [_object, true, nil, nil, true, true] call ace_dragging_fnc_setCarryable;
+    [_object, 1] call ace_cargo_fnc_setSize;
+    [_object, 0] call ace_cargo_fnc_setSpace;
+};
+
 // Make loot crates (and anything else Antistasi itself flags the same way)
 // ACE-carryable, on any variant that has them at all. Wraps
 // A3A_fnc_initObject rather than config-patching a specific loot crate
@@ -30,7 +48,7 @@ if (!isNil "A3A_fnc_initObject") then {
             // includes its cargo) is skipped entirely rather than checked
             // against ACE_maxWeightCarry, so a full loot crate is never
             // refused for being too heavy to pick up.
-            [_object, true, nil, nil, true, true] call ace_dragging_fnc_setCarryable;
+            [_object] call GVAR(makeCrateLootable);
         };
 
         // Medical tent: add a scroll-wheel action to buy a medical supply
@@ -61,10 +79,12 @@ if (!isNil "A3A_fnc_initObject") then {
     };
 };
 
-// Surrender crates (fn_surrenderAction.sqf) and outpost/base "zone ammo
-// boxes" (fn_createZoneAmmoBox.sqf) get the same carryable/weightless
-// treatment, and are also wired into the garage system's own "void the
-// crate, transfer contents to arsenal" path (garage/Public/fn_addVehicle.sqf's
+// Surrender crates (fn_surrenderAction.sqf), outpost/base "zone ammo boxes"
+// (fn_createZoneAmmoBox.sqf), and salvage-mission equipment boxes
+// (fn_LOG_Salvage.sqf) get the same carryable/weightless/cargo-loadable
+// treatment (GVAR(makeCrateLootable), above), and are also wired into the
+// garage system's own "void the crate, transfer contents to arsenal" path
+// (garage/Public/fn_addVehicle.sqf's
 // _utilityRefund - triggers when A3A_canGarage is set AND the object's type
 // is registered in A3A_utilityItemHM with the "loot" flag; currently neither
 // is true for either kind of crate).
@@ -133,7 +153,12 @@ if (!isNil "A3A_fnc_initUtilityItems") then {
                 _classnames
             };
 
-            private _classnames = (["surrenderCrate"] call _fnc_resolveClassnames) + (["ammobox"] call _fnc_resolveClassnames);
+            // equipmentBox: the crate spawned for the sunken-ship "Logistics
+            // for Salvage" mission (core/functions/Missions/fn_LOG_Salvage.sqf,
+            // Faction(side) get "equipmentBox" - same per-side shape and
+            // resolution as "ammobox", confirmed via source on both CE and
+            // Ultimate/TEH).
+            private _classnames = (["surrenderCrate"] call _fnc_resolveClassnames) + (["ammobox"] call _fnc_resolveClassnames) + (["equipmentBox"] call _fnc_resolveClassnames);
 
             {
                 if !(_x in A3A_utilityItemHM) then {
@@ -143,7 +168,7 @@ if (!isNil "A3A_fnc_initUtilityItems") then {
                 [_x, "init", {
                     params ["_object"];
                     _object setVariable ["A3A_canGarage", true, true];
-                    [_object, true, nil, nil, true, true] call ace_dragging_fnc_setCarryable;
+                    [_object] call GVAR(makeCrateLootable);
                 }, true, [], true] call CBA_fnc_addClassEventHandler;
             } forEach _classnames;
 
