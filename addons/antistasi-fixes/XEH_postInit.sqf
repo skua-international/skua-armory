@@ -1,5 +1,26 @@
 #include "script_component.hpp"
 
+// Idempotency guard: field-confirmed (RPT: "Error GIAS pre stack size
+// violation" from inside the A3A_fnc_initUtilityItems wrap) that this script
+// can run more than once against the same missionNamespace - a dedicated
+// server restarting the mission in place without a full process restart is
+// the likely trigger, though the exact mechanism wasn't pinned down. Every
+// wrap below follows the same capture-then-reassign shape:
+// `GVAR(originalX) = X; X = {... _this call GVAR(originalX) ...};` - and
+// GVAR(originalX) is a plain mutable missionNamespace global, not a
+// snapshotted closure value (an earlier bug in this same file, the
+// GVAR(makeCrateLootable) fix, established that a `private` doesn't survive
+// into a separately-invoked reassigned global function either, so this
+// isn't a case of "just make it private" - see that fix's own history). If
+// this script runs a second time, "GVAR(originalX) = X" captures the FIRST
+// wrapper (not the true original), then reassigning X to a second wrapper
+// still leaves the first wrapper's own body reading the same
+// now-overwritten GVAR(originalX) at call time - which by then points back
+// at the first wrapper itself, recursing forever. Simplest fix: never let
+// the install logic run twice in the first place.
+if (!isNil QGVAR(installed)) exitWith {};
+GVAR(installed) = true;
+
 // Shared by every crate-like object this addon touches (rebel-buyable loot
 // crate, surrender crate, outpost/garrison ammo box, salvage equipment box) -
 // carryable and weight-exempt (ace_dragging_fnc_setCarryable, see its own
