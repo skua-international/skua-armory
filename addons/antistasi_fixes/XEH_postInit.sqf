@@ -290,8 +290,10 @@ if (!isNil "A3A_fnc_initUtilityItems") then {
 // this addon's own UI-facing outpostType value; it's disguised as
 // "WATCHPOST" before handing off to Antistasi's own cost calc and
 // establishment flow, and the real distinguishing bit (aggressive) is
-// tracked as a broadcast marker variable (A3A_outpostAggressive) applied to
-// the marker after Antistasi's own creation call succeeds.
+// tracked as a broadcast missionNamespace variable keyed by marker name (see
+// GVAR(fnc_setAggressiveOutpost)/GVAR(fnc_isAggressiveOutpost) below - a
+// marker is a plain string, not a valid setVariable/getVariable target)
+// applied after Antistasi's own creation call succeeds.
 //
 // SCRT_fnc_outpost_createWatchpostDistance is the one piece that can't be
 // wrapped call-through style: it sets the garrison's behaviour/combat mode
@@ -311,6 +313,27 @@ if (!isNil "A3A_fnc_initUtilityItems") then {
 // the vanilla save/load pass and this addon's own pass) under its own save
 // key, and reapplies it right after Antistasi's own load finishes.
 if (!isNil "SCRT_fnc_outpost_createWatchpost") then {
+    // Markers are plain strings, not one of setVariable/getVariable's valid
+    // target types (Namespace/Object/Group/Display/Control/Team
+    // member/Task/Location) - confirmed the hard way (RPT: "Error
+    // getvariable: Type String, expected Namespace,Object,..."). Antistasi's
+    // own code never calls setVariable ON a marker either - see e.g.
+    // fn_outpost_createWatchpost.sqf's own `spawner setVariable [_marker,
+    // 2, true]`, which sets a variable ON THE spawner object, keyed BY the
+    // marker name string. Same shape here, keyed on missionNamespace (any
+    // real Namespace/Object works as the target; nothing else in this addon
+    // needs that particular value namespaced further) with the marker name
+    // folded into the variable name itself so different markers don't
+    // collide. The isGlobal broadcast on the setter matches what a direct
+    // `_marker setVariable [..., true]` would have done had it worked.
+    GVAR(fnc_isAggressiveOutpost) = {
+        missionNamespace getVariable [format [QGVAR(outpostAggressive) + "_%1", _this], false]
+    };
+    GVAR(fnc_setAggressiveOutpost) = {
+        params ["_marker", "_value"];
+        missionNamespace setVariable [format [QGVAR(outpostAggressive) + "_%1", _marker], _value, true];
+    };
+
     GVAR(originalPopulateCommanderMenu) = SCRT_fnc_ui_populateCommanderMenu;
     SCRT_fnc_ui_populateCommanderMenu = {
         private _result = _this call GVAR(originalPopulateCommanderMenu);
@@ -376,7 +399,7 @@ if (!isNil "SCRT_fnc_outpost_createWatchpost") then {
 
         if (_aggressive) then {
             {
-                _x setVariable [QGVAR(outpostAggressive), true, true];
+                [_x, true] call GVAR(fnc_setAggressiveOutpost);
                 [_x] remoteExec ["A3A_fnc_mrkUpdate", 0, true];
             } forEach (watchpostsFIA - _before);
         };
@@ -403,7 +426,7 @@ if (!isNil "SCRT_fnc_outpost_createWatchpost") then {
             _markerName
         };
 
-        if (_originalName getVariable [QGVAR(outpostAggressive), false]) then {
+        if (_originalName call GVAR(fnc_isAggressiveOutpost)) then {
             private _dummyName = format ["Dum%1", _originalName];
             private _visibleMarkerName = [_originalName, _dummyName] select (markerShape _dummyName != "");
             _visibleMarkerName setMarkerColorLocal "ColorRed";
@@ -423,7 +446,7 @@ if (!isNil "SCRT_fnc_outpost_createWatchpost") then {
 
         private _positionX = getMarkerPos _markerX;
         private _typeGroup = A3A_faction_reb get "groupSniper";
-        private _aggressive = _markerX getVariable [QGVAR(outpostAggressive), false];
+        private _aggressive = _markerX call GVAR(fnc_isAggressiveOutpost);
 
         private _props = [];
 
@@ -489,7 +512,7 @@ if (!isNil "SCRT_fnc_outpost_createWatchpost") then {
         GVAR(originalSaveLoop) = A3A_fnc_saveLoop;
         A3A_fnc_saveLoop = {
             private _result = _this call GVAR(originalSaveLoop);
-            private _flags = watchpostsFIA apply {_x getVariable [QGVAR(outpostAggressive), false]};
+            private _flags = watchpostsFIA apply {_x call GVAR(fnc_isAggressiveOutpost)};
             [QGVAR(aggressiveOutpostFlags), _flags] call A3A_fnc_setStatVariable;
             _result
         };
@@ -504,11 +527,11 @@ if (!isNil "SCRT_fnc_outpost_createWatchpost") then {
             if (!isNil "_flags" && {count _flags == count watchpostsFIA}) then {
                 {
                     if (_x) then {
-                        (watchpostsFIA select _forEachIndex) setVariable [QGVAR(outpostAggressive), true, true];
+                        [(watchpostsFIA select _forEachIndex), true] call GVAR(fnc_setAggressiveOutpost);
                     };
                 } forEach _flags;
 
-                if (watchpostsFIA findIf {_x getVariable [QGVAR(outpostAggressive), false]} != -1) then {
+                if (watchpostsFIA findIf {_x call GVAR(fnc_isAggressiveOutpost)} != -1) then {
                     [watchpostsFIA] remoteExec ["A3U_fnc_mrkUpdateBulk", 0, true];
                 };
             };
