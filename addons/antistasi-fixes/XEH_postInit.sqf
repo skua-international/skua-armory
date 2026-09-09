@@ -380,14 +380,20 @@ if (!isNil "SCRT_fnc_outpost_createWatchpost") then {
             };
         };
 
-        private _result = _this call GVAR(originalSetOutpostCost);
+        // Not capturing a return value here - the original's own last
+        // statement is a plain assignment (outpostCost = [_costs, _hr];),
+        // and capturing that via `private _result = ... call ...` is what
+        // actually caused the "GIAS pre stack size violation" field report,
+        // not (as first assumed) recursion from a double-installed wrap -
+        // see A3A_fnc_initUtilityItems's wrap history. Nothing downstream
+        // reads this function's return value anyway (callers use it for the
+        // outpostCost/outpostType globals it sets, same as this wrap does).
+        _this call GVAR(originalSetOutpostCost);
 
         if (_isCombatPost) then {
             lbSetData [2750, _index, "COMBATPOST"];
             outpostType = "COMBATPOST";
         };
-
-        _result
     };
 
     // Disguise as WATCHPOST before the original resource/task/radio checks
