@@ -58,7 +58,14 @@ if (!isNil "A3A_fnc_initObject") then {
         // cooldown, commander-only gating and placement behavior are
         // identical to buying it normally, not reimplemented here. Saves a
         // trip back to a trader to resupply a tent that's already placed.
-        private _medTentType = if (isNil "A3A_faction_reb") then {""} else {A3A_faction_reb getOrDefault ["vehicleHealthStation", ""]};
+        // vehicleHealthStation is [classname, price] (RebelDefaults.sqf:
+        // ["vehicleHealthStation", ["Land_MedicalTent_01_MTP_closed_F", 75]]
+        // call _fnc_saveToTemplate;), same shape as vehicleMedicalBox below -
+        // confirmed via source (gui/functions/GUI/fn_buyVehicleTabs.sqf reads
+        // it as `(A3A_faction_reb get 'vehicleHealthStation')#0`) - not a
+        // bare classname string, which threw "Error !=: Type Array,
+        // expected ..." at runtime once field-tested.
+        private _medTentType = if (isNil "A3A_faction_reb") then {""} else {(A3A_faction_reb getOrDefault ["vehicleHealthStation", ["", 0]]) select 0};
         if (_medTentType != "" && {typeOf _object isEqualTo _medTentType}) then {
             private _medBoxType = (A3A_faction_reb getOrDefault ["vehicleMedicalBox", ["", 0]]) select 0;
             if (_medBoxType != "") then {
@@ -184,7 +191,9 @@ if (!isNil "A3A_fnc_initUtilityItems") then {
             // to the existing entry's flags rather than replacing it, so
             // its other behavior (placeable, movable, rotatable, packable)
             // is untouched.
-            private _medTentType = A3A_faction_reb getOrDefault ["vehicleHealthStation", ""];
+            // vehicleHealthStation is [classname, price] - see the other
+            // call site's comment above for the source confirmation.
+            private _medTentType = (A3A_faction_reb getOrDefault ["vehicleHealthStation", ["", 0]]) select 0;
             if (_medTentType != "") then {
                 private _entry = A3A_utilityItemHM getOrDefault [_medTentType, []];
                 if (_entry isNotEqualTo [] && {!("save" in (_entry select 4))}) then {
