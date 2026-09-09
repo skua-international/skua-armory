@@ -271,3 +271,249 @@ if (!isNil "A3A_fnc_initUtilityItems") then {
 
     ["CAManBase", 0, ["ACE_MainActions"], _unloadToBox, true] call ace_interact_menu_fnc_addActionToClass;
 }] call CBA_fnc_execNextFrame;
+
+// Combat Outpost: an aggressive variant of the commander's Watchpost action -
+// adds "Combat Outpost" to the outpost-type dropdown, and behaves identically
+// to a Watchpost (same cost formula, no extra tier gate, same marker type)
+// except its AI garrison patrols COMBAT/RED instead of STEALTH/GREEN.
+// Ultimate-only: gated on the presence of Ultimate's own outpost functions
+// rather than requiredAddons, the same runtime-guard shape as the TEH
+// loot_vehicle fix above - CE and TEH have no watchpost concept at all, so
+// there's nothing to hook there.
+//
+// Design: rather than reimplementing the whole watchpost pipeline (save/load,
+// garrison eligibility, distance-based spawn/despawn, frontline calc, etc.)
+// as an independent emplacement type, a Combat Outpost IS a Watchpost as far
+// as Antistasi's own bookkeeping is concerned - it lives in the same
+// watchpostsFIA array, uses the same marker type/class, and goes through the
+// same SCRT_fnc_outpost_createWatchpost call. "COMBATPOST" only exists as
+// this addon's own UI-facing outpostType value; it's disguised as
+// "WATCHPOST" before handing off to Antistasi's own cost calc and
+// establishment flow, and the real distinguishing bit (aggressive) is
+// tracked as a broadcast marker variable (A3A_outpostAggressive) applied to
+// the marker after Antistasi's own creation call succeeds.
+//
+// SCRT_fnc_outpost_createWatchpostDistance is the one piece that can't be
+// wrapped call-through style: it sets the garrison's behaviour/combat mode
+// once, immediately, then blocks in a waitUntil for the emplacement's entire
+// lifetime (which can be the rest of the mission) before returning - by the
+// time a wrap's "after call-through" code would run, the post is long gone.
+// That one function is vendored wholesale below (copied from Ultimate's own
+// core/functions/Outpost/fn_outpost_createWatchpostDistance.sqf) with only
+// the behaviour/combat-mode branch changed to check the aggressive flag.
+//
+// Antistasi's own save/load does NOT preserve arbitrary marker setVariables
+// for watchposts - fn_saveLoop.sqf's watchpostsFIA case only round-trips
+// [position, garrison] per entry, and fn_loadStat.sqf's "watchpostsFIA" case
+// recreates each marker fresh (fixed type/color, no variables restored).
+// So this addon separately persists a parallel array of aggressive-flags
+// (same order as watchpostsFIA, since nothing reorders that array between
+// the vanilla save/load pass and this addon's own pass) under its own save
+// key, and reapplies it right after Antistasi's own load finishes.
+if (!isNil "SCRT_fnc_outpost_createWatchpost") then {
+    GVAR(originalPopulateCommanderMenu) = SCRT_fnc_ui_populateCommanderMenu;
+    SCRT_fnc_ui_populateCommanderMenu = {
+        private _result = _this call GVAR(originalPopulateCommanderMenu);
+        private _idx = lbAdd [2750, "Combat Outpost"];
+        lbSetData [2750, _idx, "COMBATPOST"];
+        _result
+    };
+
+    // Cost is identical to WATCHPOST's own formula, so rather than
+    // duplicating it we briefly disguise the combobox selection as
+    // WATCHPOST for the duration of the original cost calc (which reads it
+    // straight back out of the listbox), then restore both the listbox data
+    // and the outpostType global it sets as a side effect.
+    GVAR(originalSetOutpostCost) = SCRT_fnc_ui_setOutpostCost;
+    SCRT_fnc_ui_setOutpostCost = {
+        disableSerialization;
+        private _display = findDisplay 60000;
+        private _isCombatPost = false;
+        private _index = -1;
+        if (!isNull _display) then {
+            _index = lbCurSel (_display displayCtrl 2750);
+            if (_index >= 0 && {lbData [2750, _index] == "COMBATPOST"}) then {
+                _isCombatPost = true;
+                lbSetData [2750, _index, "WATCHPOST"];
+            };
+        };
+
+        private _result = _this call GVAR(originalSetOutpostCost);
+
+        if (_isCombatPost) then {
+            lbSetData [2750, _index, "COMBATPOST"];
+            outpostType = "COMBATPOST";
+        };
+
+        _result
+    };
+
+    // Disguise as WATCHPOST before the original resource/task/radio checks
+    // and tier gate run (WATCHPOST has no tier gate, matching "combat posts
+    // work the same as regular watchposts"), and remember that this
+    // establishment is meant to end up aggressive so the createWatchpost
+    // wrap below can tag the resulting marker.
+    GVAR(originalSetEstablishOutpostMode) = SCRT_fnc_ui_setEstablishOutpostMode;
+    SCRT_fnc_ui_setEstablishOutpostMode = {
+        GVAR(pendingAggressiveOutpost) = (outpostType == "COMBATPOST");
+        if (GVAR(pendingAggressiveOutpost)) then {outpostType = "WATCHPOST"};
+        _this call GVAR(originalSetEstablishOutpostMode);
+    };
+
+    // Tag the newly-created marker aggressive once Antistasi's own
+    // (long-running, server-only) establishment call actually succeeds -
+    // detected by diffing watchpostsFIA before/after, since the original
+    // never returns or exposes the marker it creates.
+    GVAR(originalCreateWatchpost) = SCRT_fnc_outpost_createWatchpost;
+    SCRT_fnc_outpost_createWatchpost = {
+        if (!isServer) exitWith {_this call GVAR(originalCreateWatchpost)};
+
+        private _aggressive = GVAR(pendingAggressiveOutpost);
+        GVAR(pendingAggressiveOutpost) = false;
+        private _before = +watchpostsFIA;
+
+        private _result = _this call GVAR(originalCreateWatchpost);
+
+        if (_aggressive) then {
+            {
+                _x setVariable [QGVAR(outpostAggressive), true, true];
+                [_x] remoteExec ["A3A_fnc_mrkUpdate", 0, true];
+            } forEach (watchpostsFIA - _before);
+        };
+
+        _result
+    };
+
+    // Color-only marker differentiation, per explicit simplification - no
+    // new marker class/icon/title, just override the existing watchpost
+    // marker's color when it's flagged aggressive. Runs after call-through
+    // since A3A_fnc_mrkUpdate recomputes (and would otherwise reset) marker
+    // color on every invocation, not just at creation - see its own
+    // colorTeamPlayer branch. Mirrors that function's own "Dum"-prefix
+    // dummy-marker resolution so the override lands on whichever marker is
+    // actually visible.
+    GVAR(originalMrkUpdate) = A3A_fnc_mrkUpdate;
+    A3A_fnc_mrkUpdate = {
+        params [["_markerName", "", [""]]];
+        private _result = _this call GVAR(originalMrkUpdate);
+
+        private _originalName = if (_markerName find "Dum" == 0) then {
+            _markerName select [3, (count _markerName) - 3]
+        } else {
+            _markerName
+        };
+
+        if (_originalName getVariable [QGVAR(outpostAggressive), false]) then {
+            private _dummyName = format ["Dum%1", _originalName];
+            private _visibleMarkerName = [_originalName, _dummyName] select (markerShape _dummyName != "");
+            _visibleMarkerName setMarkerColorLocal "ColorRed";
+        };
+
+        _result
+    };
+
+    // Vendored copy of Ultimate's core/functions/Outpost/fn_outpost_createWatchpostDistance.sqf -
+    // see the block comment above for why this one can't be a call-through
+    // wrap. Only change from the original: behaviour/combat mode branches on
+    // A3A_outpostAggressive instead of being unconditionally STEALTH/GREEN.
+    SCRT_fnc_outpost_createWatchpostDistance = {
+        params ["_markerX"];
+
+        if (!isServer and hasInterface) exitWith {};
+
+        private _positionX = getMarkerPos _markerX;
+        private _typeGroup = A3A_faction_reb get "groupSniper";
+        private _aggressive = _markerX getVariable [QGVAR(outpostAggressive), false];
+
+        private _props = [];
+
+        private _groupX = [_positionX, teamPlayer, _typeGroup] call A3A_fnc_spawnGroup;
+        if (_aggressive) then {
+            _groupX setBehaviour "COMBAT";
+            _groupX setCombatMode "RED";
+        } else {
+            _groupX setBehaviour "STEALTH";
+            _groupX setCombatMode "GREEN";
+        };
+        {
+            [_x, _markerX] spawn A3A_fnc_FIAinitBases;
+        } forEach units _groupX;
+
+        private _campfire = createVehicle ["Land_Campfire_F", _positionX];
+        private _tent = ["Land_TentDome_F", getPosWorld _campfire] call BIS_fnc_createSimpleObject;
+        _tent setDir (random 360);
+        _tent setPos [(getPos _tent select 0) + 4, (getPos _tent select 1) + 4, (getPos _tent select 2) - 0.2];
+
+        _props pushBack _campfire;
+        _props pushBack _tent;
+
+        {
+            _x setVectorUp surfaceNormal position _x;
+        } forEach _props;
+
+        [_markerX, "RebelWatchpost", true] call A3A_events_fnc_triggerEvent;
+
+        waitUntil {
+            sleep 1;
+            ((spawner getVariable _markerX == 2)) or
+            ({alive _x} count units _groupX == 0) or (!(_markerX in watchpostsFIA))
+        };
+
+        if ({alive _x} count units _groupX == 0) then {
+            watchpostsFIA = watchpostsFIA - [_markerX]; publicVariable "watchpostsFIA";
+            markersX = markersX - [_markerX]; publicVariable "markersX";
+            sidesX setVariable [_markerX, nil, true];
+            [5, -5, _positionX] remoteExec ["A3A_fnc_citySupportChange", 2];
+            deleteMarker _markerX;
+            ["TaskFailed", ["", (localize "STR_notifiers_watchpost_lost")]] remoteExec ["BIS_fnc_showNotification", 0];
+        };
+
+        waitUntil {sleep 1; (spawner getVariable _markerX == 2) or (!(_markerX in watchpostsFIA))};
+
+        {
+            deleteVehicle _x
+        } forEach units _groupX;
+        deleteGroup _groupX;
+
+        {
+            deleteVehicle _x;
+        } forEach _props;
+
+        [_markerX, "RebelWatchpost", false] call A3A_events_fnc_triggerEvent;
+    };
+
+    // Persist the aggressive flags (see block comment above for why this is
+    // needed at all) alongside Antistasi's own save, under this addon's own
+    // key so it doesn't collide with anything vanilla save/load whitelists.
+    if (!isNil "A3A_fnc_saveLoop") then {
+        GVAR(originalSaveLoop) = A3A_fnc_saveLoop;
+        A3A_fnc_saveLoop = {
+            private _result = _this call GVAR(originalSaveLoop);
+            private _flags = watchpostsFIA apply {_x getVariable [QGVAR(outpostAggressive), false]};
+            [QGVAR(aggressiveOutpostFlags), _flags] call A3A_fnc_setStatVariable;
+            _result
+        };
+    };
+
+    if (!isNil "A3A_fnc_loadServer") then {
+        GVAR(originalLoadServer) = A3A_fnc_loadServer;
+        A3A_fnc_loadServer = {
+            private _result = _this call GVAR(originalLoadServer);
+
+            private _flags = [QGVAR(aggressiveOutpostFlags)] call A3A_fnc_returnSavedStat;
+            if (!isNil "_flags" && {count _flags == count watchpostsFIA}) then {
+                {
+                    if (_x) then {
+                        (watchpostsFIA select _forEachIndex) setVariable [QGVAR(outpostAggressive), true, true];
+                    };
+                } forEach _flags;
+
+                if (watchpostsFIA findIf {_x getVariable [QGVAR(outpostAggressive), false]} != -1) then {
+                    [watchpostsFIA] remoteExec ["A3U_fnc_mrkUpdateBulk", 0, true];
+                };
+            };
+
+            _result
+        };
+    };
+};
